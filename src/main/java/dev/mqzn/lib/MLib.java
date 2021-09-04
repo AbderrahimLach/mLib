@@ -3,6 +3,7 @@ package dev.mqzn.lib;
 import dev.mqzn.lib.commands.test.OpenMenuCommand;
 import dev.mqzn.lib.commands.test.SubsCommand;
 import dev.mqzn.lib.managers.CommandManager;
+import dev.mqzn.lib.managers.HologramManager;
 import dev.mqzn.lib.managers.MenuManager;
 import dev.mqzn.lib.menus.listeners.MenuListener;
 import org.bukkit.Bukkit;
@@ -15,6 +16,7 @@ public final class MLib extends JavaPlugin {
 
     private MenuManager menuManager;
     private CommandManager commandManager;
+    private HologramManager hologramManager;
 
     @Override
     public void onEnable() {
@@ -24,6 +26,7 @@ public final class MLib extends JavaPlugin {
 
         menuManager = new MenuManager();
         commandManager = new CommandManager();
+        hologramManager = new HologramManager();
 
         PluginHandler.getPlugins().forEach(p -> {
             if(p != null) {
@@ -49,6 +52,10 @@ public final class MLib extends JavaPlugin {
 
     public static MLib getInstance() {
         return instance;
+    }
+
+    public HologramManager getHologramManager() {
+        return hologramManager;
     }
 
     public MenuManager getMenuManager() {
