@@ -48,7 +48,6 @@ public abstract class BigCommand extends MCommand {
     @Override
     public void execute(CommandSender sender, CommandArg... args) {
 
-        long n = System.currentTimeMillis();
         if(args.length == 0) {
             sender.sendMessage(FormatUtils.color(this.getUsage()));
             return;
@@ -78,48 +77,40 @@ public abstract class BigCommand extends MCommand {
 
         Optional<SubCommandRequirement> firstReq = findRequirement(sub, args);
 
-        if(!firstReq.isPresent()) {
-
-            if(sub instanceof ParentSubCommand) {
-
-                ParentSubCommand parent = (ParentSubCommand)sub;
-                LinkedHashSet<SubCommand> childUsed = this.getChildrenUsed(parent, args);
-
-                if(childUsed.isEmpty())  {
-                    sender.sendMessage(FormatUtils.color(sub.getUsage()));
-                    return;
-                }
-
-                for(SubCommand child : childUsed) {
-
-                    if(child instanceof ParentSubCommand) {
-                        throw new IllegalArgumentException("SubCommand is a child of a parent sub command and " +
-                                "is a parent sub command at the same time !");
-                    }
-
-                    Optional<SubCommandRequirement> req = findRequirement(child, args);
-                    if(!req.isPresent()) {
-                        sender.sendMessage(FormatUtils.color(child.getUsage()));
-                        break;
-                    }
-
-                    req.get().execute(sender, args);
-
-                    System.out.println("TOOK " + (System.currentTimeMillis()-n) + "MS, To execute the sub child " + child.getName());
-                }
-
-
-
-            }else {
-                sender.sendMessage(FormatUtils.color(sub.getUsage()));
-            }
-
+        if(firstReq.isPresent()) {
+            firstReq.get().execute(sender, args);
             return;
         }
 
-        firstReq.get().execute(sender, args);
+        if(sub instanceof ParentSubCommand) {
 
-        System.out.println("TOOK " + (System.currentTimeMillis()-n) + "MS");
+            ParentSubCommand parent = (ParentSubCommand)sub;
+            LinkedHashSet<SubCommand> childUsed = this.getChildrenUsed(parent, args);
+
+            if(childUsed.isEmpty())  {
+                sender.sendMessage(FormatUtils.color(sub.getUsage()));
+                return;
+            }
+
+            LinkedHashSet<ParentSubCommand> parentsUsedAsChildren = new LinkedHashSet<>();
+
+            for(SubCommand child : childUsed) {
+                if(child instanceof ParentSubCommand) {
+                    parentsUsedAsChildren.add((ParentSubCommand)child);
+                }
+            }
+
+
+            for(ParentSubCommand parents : parentsUsedAsChildren) {
+                executeParent(sender, sub, parents, args);
+            }
+
+
+
+        }else {
+            sender.sendMessage(FormatUtils.color(sub.getUsage()));
+        }
+
     }
 
     private Optional<SubCommand> getSubCommand(CommandArg... args) {
@@ -157,6 +148,7 @@ public abstract class BigCommand extends MCommand {
         return results;
     }
 
+
     private Optional<SubCommandRequirement> findRequirement(SubCommand sub, CommandArg... args) {
 
         SubCommandRequirement scReq = null;
@@ -169,6 +161,30 @@ public abstract class BigCommand extends MCommand {
 
         return Optional.ofNullable(scReq);
     }
+
+
+    private void executeParent(CommandSender sender, SubCommand mainSub, ParentSubCommand parent, CommandArg... args) {
+
+        LinkedHashSet<SubCommand> children = getChildrenUsed(parent);
+
+        if(children.isEmpty())  {
+            sender.sendMessage(FormatUtils.color(parent.getUsage()));
+            return;
+        }
+
+        for(SubCommand child : children) {
+
+            Optional<SubCommandRequirement> req = findRequirement(child, args);
+            if(!req.isPresent()) {
+                sender.sendMessage(FormatUtils.color(mainSub.getUsage()));
+                break;
+            }
+
+            req.get().execute(sender, args);
+        }
+
+    }
+
 
 
 }
