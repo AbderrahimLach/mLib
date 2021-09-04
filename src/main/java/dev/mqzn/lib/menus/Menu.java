@@ -20,8 +20,6 @@ public abstract class Menu implements IMenu {
     }
 
 
-
-
     public abstract int getRows();
 
 

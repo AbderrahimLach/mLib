@@ -43,14 +43,10 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
 
     private void setPageItems(M menu) {
         String display = "&aNext Page >>";
-        //TODO Get current page from hashmap !
-        //TODO THEN OPEN NEXT PAGE
-        //TODO [NEXT] INDEX + 1
+
         MenuItem NEXT_PAGE = new MenuItem(ItemBuilder.construct().create(Material.ARROW, 1)
                 .setDisplay(display).build(), this.getSize()-1, ((player, itemStack) -> {
-            //TODO Get current page from hashmap !
-            //TODO THEN OPEN NEXT PAGE
-            //TODO [NEXT] INDEX + 1
+
             try {
                 menu.openPage(player, this.getIndex() + 1);
             } catch (MenuPageOutOfBounds ex) {
@@ -61,14 +57,9 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
         }));
 
         display = "&e<< Previous Page";
-        //TODO Get current page from hashmap !
-        //TODO THEN OPEN PREVIOUS PAGE
-        //TODO [PREVIOUS] INDEX - 1
+
         MenuItem PREVIOUS_PAGE = new MenuItem(ItemBuilder.construct().create(Material.ARROW, 1)
                 .setDisplay(display).build(), this.getSize()-9, ((player, itemStack) -> {
-            //TODO Get current page from hashmap !
-            //TODO THEN OPEN PREVIOUS PAGE
-            //TODO [PREVIOUS] INDEX - 1
 
             try {
                 menu.openPage(player, this.getIndex() - 1);
