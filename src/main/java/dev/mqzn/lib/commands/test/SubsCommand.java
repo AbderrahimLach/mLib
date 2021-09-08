@@ -19,7 +19,7 @@ public class SubsCommand extends BigCommand {
     }
 
     @Override
-    public Map<Integer, Class<?>> getArgParses() {
+    public Map<Integer, Class<?>> setArgParses() {
         return new HashMap<>();
     }
 

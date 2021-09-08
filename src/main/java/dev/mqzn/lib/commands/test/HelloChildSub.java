@@ -1,67 +1,54 @@
 package dev.mqzn.lib.commands.test;
 
-import dev.mqzn.lib.commands.api.ParentSubCommand;
 import dev.mqzn.lib.commands.api.SubCommand;
 import dev.mqzn.lib.utils.FormatUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
-public class SecondSub implements ParentSubCommand {
-
+public class HelloChildSub implements SubCommand {
 
     @Override
     public String getName() {
-        return "second";
+        return "hello";
     }
 
     @Override
     public String getPermission() {
-        return "subs.second";
+        return "hello.perm";
     }
 
     @Override
     public String getDescription() {
-        return "second sub";
+        return "desc";
     }
 
     @Override
     public String getUsage() {
-        return "&c/Subs first <player> second <value>";
+        return "&c/Subs First <player> second <value> hello";
     }
 
     @Override
     public int getPosition() {
-        return 2;
+        return 4;
     }
 
     @Override
     public SubCommandRequirement[] getRequirements() {
-
         SubCommandRequirement req = new SubCommandRequirement(this);
 
-        req.addAction(4, (sender, args)-> {
+        req.addAction(5, (sender, args)-> {
             Player player = Bukkit.getPlayer((String) args[1].getParsedArg());
             boolean value = Boolean.parseBoolean(args[3].getArgument());
-            if(player != null) {
-                player.sendMessage(ChatColor.BLUE + "Second Sub Requirement action worked !");
-            }else {
-                sender.sendMessage(ChatColor.RED + args[1].getArgument() + " is Offline");
-            }
 
+            assert  player != null;
+
+            player.sendMessage(FormatUtils.color("&aHELLO BUDDY :DDDD"));
             sender.sendMessage(FormatUtils.color("&eVALUE FROM CMD: " + (value ? "&aTRUE" : "&cFALSE")));
+
         });
 
         return new SubCommandRequirement[] {
                 req
-        };
-    }
-
-
-    @Override
-    public SubCommand[] getChildSubCommands() {
-        return new SubCommand[] {
-                new HelloChildSub()
         };
     }
 }

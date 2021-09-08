@@ -1,8 +1,9 @@
 package dev.mqzn.lib.commands.api;
 
+import dev.mqzn.lib.commands.api.SubCommand.SubCommandRequirement;
 import dev.mqzn.lib.utils.FormatUtils;
 import org.bukkit.command.CommandSender;
-import dev.mqzn.lib.commands.api.SubCommand.SubCommandRequirement;
+
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Optional;
@@ -54,7 +55,7 @@ public abstract class BigCommand extends MCommand {
         }
 
         if(args.length == 1 && args[0].getArgument().equalsIgnoreCase("help")) {
-            //TODO send help for SubCommands
+            //TODO send help for SubCommands using iteration
             return;
         }
 
@@ -75,6 +76,12 @@ public abstract class BigCommand extends MCommand {
             return;
         }
 
+        executeChildren(sub, sender, args);
+
+    }
+
+    private void executeChildren(SubCommand sub, CommandSender sender,  CommandArg[] args) {
+
         Optional<SubCommandRequirement> firstReq = findRequirement(sub, args);
 
         if(firstReq.isPresent()) {
@@ -82,36 +89,23 @@ public abstract class BigCommand extends MCommand {
             return;
         }
 
-        if(sub instanceof ParentSubCommand) {
-
-            ParentSubCommand parent = (ParentSubCommand)sub;
-            LinkedHashSet<SubCommand> childUsed = this.getChildrenUsed(parent, args);
-
-            if(childUsed.isEmpty())  {
-                sender.sendMessage(FormatUtils.color(sub.getUsage()));
-                return;
-            }
-
-            LinkedHashSet<ParentSubCommand> parentsUsedAsChildren = new LinkedHashSet<>();
-
-            for(SubCommand child : childUsed) {
-                if(child instanceof ParentSubCommand) {
-                    parentsUsedAsChildren.add((ParentSubCommand)child);
-                }
-            }
-
-
-            for(ParentSubCommand parents : parentsUsedAsChildren) {
-                executeParent(sender, sub, parents, args);
-            }
-
-
-
-        }else {
+        if(!(sub instanceof ParentSubCommand)) {
+            // base case
             sender.sendMessage(FormatUtils.color(sub.getUsage()));
+            return;
         }
 
+        ParentSubCommand parent = (ParentSubCommand)sub;
+
+        Optional<SubCommand> childUsed = this.getChildUsed(parent, args);
+        if(!childUsed.isPresent()) {
+            sender.sendMessage(FormatUtils.color(parent.getUsage()));
+            return;
+        }
+
+        executeChildren(childUsed.get(), sender, args);
     }
+
 
     private Optional<SubCommand> getSubCommand(CommandArg... args) {
         SubCommand sc = null;
@@ -130,22 +124,24 @@ public abstract class BigCommand extends MCommand {
         return Optional.ofNullable(sc);
     }
 
-    private LinkedHashSet<SubCommand> getChildrenUsed(ParentSubCommand parent, CommandArg... args) {
+    private Optional<SubCommand> getChildUsed(ParentSubCommand parent, CommandArg... args) {
 
         SubCommand[] children = parent.getChildSubCommands();
-        LinkedHashSet<SubCommand> results = new LinkedHashSet<>();
-
         assert parent.getPosition() < args.length;
+
+        SubCommand childSafe = null;
+
         for (int start = parent.getPosition(); start < args.length; start++) {
             for(SubCommand child : children) {
                 if (child.getPosition() == start
                         && child.getName().equalsIgnoreCase(args[start].getArgument())) {
-                    results.add(child);
+                    childSafe = child;
+                    break;
                 }
             }
         }
 
-        return results;
+        return Optional.ofNullable(childSafe);
     }
 
 
@@ -163,27 +159,7 @@ public abstract class BigCommand extends MCommand {
     }
 
 
-    private void executeParent(CommandSender sender, SubCommand mainSub, ParentSubCommand parent, CommandArg... args) {
 
-        LinkedHashSet<SubCommand> children = getChildrenUsed(parent);
-
-        if(children.isEmpty())  {
-            sender.sendMessage(FormatUtils.color(parent.getUsage()));
-            return;
-        }
-
-        for(SubCommand child : children) {
-
-            Optional<SubCommandRequirement> req = findRequirement(child, args);
-            if(!req.isPresent()) {
-                sender.sendMessage(FormatUtils.color(mainSub.getUsage()));
-                break;
-            }
-
-            req.get().execute(sender, args);
-        }
-
-    }
 
 
 

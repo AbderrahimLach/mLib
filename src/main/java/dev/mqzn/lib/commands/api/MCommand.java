@@ -5,6 +5,7 @@ import dev.mqzn.lib.utils.FormatUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
 import java.util.Arrays;
 import java.util.Map;
 
@@ -19,14 +20,18 @@ public abstract class MCommand extends Command {
     }
 
     private final String permission;
+    private final Map<Integer, Class<?>> argParses;
+
     public MCommand(String name, String permission, String desc, String usage, String... aliases) {
         super(name, desc, usage, Arrays.asList(aliases));
         this.permission = permission;
+        argParses = setArgParses();
     }
 
     public MCommand(String name, String desc, String usage, String[] aliases) {
         super(name, desc, usage, Arrays.asList(aliases));
         this.permission = null;
+        argParses = setArgParses();
     }
 
 
@@ -36,7 +41,11 @@ public abstract class MCommand extends Command {
                 + this.getName().toLowerCase() : this.permission;
     }
 
-    public abstract Map<Integer, Class<?>> getArgParses();
+    protected Map<Integer, Class<?>> getArgParses() {
+        return argParses;
+    }
+
+    public abstract Map<Integer, Class<?>> setArgParses();
 
     public boolean execute(CommandSender sender, String label, String[] args) {
 
@@ -55,7 +64,7 @@ public abstract class MCommand extends Command {
 
         for (int i = 0; i < args.length; i++) {
 
-            Class<?> clazz = getArgParses().get(i);
+            Class<?> clazz = argParses.get(i);
             if(clazz == null) {
                 clazz = String.class;
             }

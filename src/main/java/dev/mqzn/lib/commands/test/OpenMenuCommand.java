@@ -20,7 +20,7 @@ public class OpenMenuCommand extends MCommand {
 
 
     @Override
-    public Map<Integer, Class<?>> getArgParses() {
+    public Map<Integer, Class<?>> setArgParses() {
         return new HashMap<>();
     }
 
