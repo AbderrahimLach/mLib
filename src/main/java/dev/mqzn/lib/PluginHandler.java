@@ -1,13 +1,14 @@
 package dev.mqzn.lib;
 
 import org.bukkit.plugin.java.JavaPlugin;
+
 import java.util.HashSet;
 import java.util.Set;
 
 public class PluginHandler {
 
     private final static Set<MPlugin> plugins;
-
+    //IGNORE THIS COMMENT
     static {
         plugins = new HashSet<>();
     }
