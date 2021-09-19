@@ -9,6 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
 import java.util.Map;
 
 public abstract class Menu implements IMenu {
@@ -21,7 +22,6 @@ public abstract class Menu implements IMenu {
 
 
     public abstract int getRows();
-
 
     public void setItem(MenuItem item) {
         contents.put(item.getSlot(), item);

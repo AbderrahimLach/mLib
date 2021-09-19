@@ -5,7 +5,7 @@ import dev.mqzn.lib.commands.api.ArgumentParser;
 public class IntegerParser implements ArgumentParser<Integer> {
 
 
-
+    @Override
     public boolean matches(String arg) {
 
         try {
@@ -19,7 +19,7 @@ public class IntegerParser implements ArgumentParser<Integer> {
 
     @Override
     public Integer parse(String arg) {
-        return matches(arg) ? Integer.parseInt(arg) : -1;
+        return Integer.parseInt(arg);
     }
 
 

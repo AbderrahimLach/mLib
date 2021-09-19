@@ -1,16 +1,21 @@
 package dev.mqzn.lib.managers;
 
+import dev.mqzn.lib.MLib;
 import dev.mqzn.lib.commands.api.ArgumentParser;
 import dev.mqzn.lib.commands.api.MCommand;
+import dev.mqzn.lib.commands.api.args.IP;
 import dev.mqzn.lib.commands.api.identifiers.BooleanParser;
 import dev.mqzn.lib.commands.api.identifiers.DoubleParser;
+import dev.mqzn.lib.commands.api.identifiers.IPParser;
 import dev.mqzn.lib.commands.api.identifiers.IntegerParser;
-import dev.mqzn.lib.commands.api.identifiers.MaterialParser;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.CommandMap;
+
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 
 public class CommandManager {
 
@@ -32,9 +37,7 @@ public class CommandManager {
             e.printStackTrace();
         }
 
-        parsers = new HashMap<>();
-        parsers.put(String.class, (ArgumentParser<String>) arg -> arg);
-        parsers.put(Material.class, new MaterialParser());
+        parsers = new LinkedHashMap<>();
 
         DoubleParser doubleParser = new DoubleParser();
         parsers.put(double.class, doubleParser);
@@ -48,19 +51,31 @@ public class CommandManager {
         parsers.put(boolean.class, booleanParser);
         parsers.put(Boolean.class, booleanParser);
 
+        parsers.put(IP.class, new IPParser());
+        parsers.put(String.class, new ArgumentParser<String>() {
+
+            @Override
+            public boolean matches(String arg) {
+                return true;
+            }
+
+            @Override
+            public String parse(String arg) {
+                return arg;
+            }
+        });
+
+    }
+
+    public Map<Class<?>, ArgumentParser<?>> getParsers() {
+        return parsers;
     }
 
     public void registerCommand(MCommand mCommand) {
         commands.put(mCommand.getName(), mCommand);
+        commandMap.register(mCommand.getName(), mCommand);
     }
 
-    public void unregisterCommand(MCommand mCommand) {
-        commands.remove(mCommand.getName());
-    }
-
-    public void unregisterCommand(String command) {
-        commands.remove(command);
-    }
 
     public boolean hasArgumentParser (Class<?> type){
         return parsers.containsKey(type);
@@ -72,7 +87,7 @@ public class CommandManager {
         return parsers.get(type);
     }
 
-    public  Optional<MCommand> getCommand(String name) {
+    public Optional<MCommand> getCommand(String name) {
 
         MCommand cmd = null;
         for(MCommand mc : commands.values()) {
@@ -85,9 +100,15 @@ public class CommandManager {
         return Optional.ofNullable(cmd);
     }
 
+    public static Class<?> getClazzType(String arg) {
 
-    public void handleRegistries() {
-        commands.forEach((name, cmd) -> commandMap.register(name, cmd));
+        for(ArgumentParser<?> parser : MLib.getInstance().getCommandManager().getParsers().values()) {
+            if(parser.matches(arg)) {
+                return parser.parse(arg).getClass();
+            }
+        }
+
+        return String.class;
     }
 
 

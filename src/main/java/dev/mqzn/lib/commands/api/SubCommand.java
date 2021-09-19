@@ -1,74 +1,80 @@
 package dev.mqzn.lib.commands.api;
 
+import com.google.common.base.Objects;
+import dev.mqzn.lib.utils.FormatUtils;
 import org.bukkit.command.CommandSender;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-public interface SubCommand {
+public abstract class SubCommand extends Requirement {
 
-    String getName();
+    private final Set<Requirement> requirements;
+    private final Set<SubCommand> children;
 
-    String getPermission();
-
-    String getDescription();
-
-    String getUsage();
-
-    int getPosition();
-
-    SubCommandRequirement[] getRequirements();
-
-
-    final class SubCommandRequirement {
-
-
-        private final Map<Integer, BiConsumer<CommandSender, CommandArg[]>> actions;
-        private final SubCommand subCommand;
-
-        public SubCommandRequirement(SubCommand subCommand) {
-            this.subCommand = subCommand;
-            this.actions = new HashMap<>();
-
-        }
-
-        public SubCommandRequirement(SubCommand subCommand, int argLength, BiConsumer<CommandSender, CommandArg[]> actions) {
-            this(subCommand);
-            this.actions.put(argLength, actions);
-        }
-
-        public SubCommandRequirement(SubCommand subCommand, Map<Integer, BiConsumer<CommandSender, CommandArg[]>> actions) {
-            this.subCommand = subCommand;
-            this.actions = actions;
-        }
-
-
-        public SubCommand getSubCommand() {
-            return subCommand;
-        }
-
-        public Map<Integer, BiConsumer<CommandSender, CommandArg[]>> getActions() {
-            return actions;
-        }
-
-
-        public void addAction(int argLegnth, BiConsumer<CommandSender, CommandArg[]> actions) {
-            this.actions.put(argLegnth, actions);
-        }
-
-
-        public void execute(CommandSender sender, CommandArg[] args) {
-            BiConsumer<CommandSender, CommandArg[]> action = this.getActions().get(args.length);
-
-            if(action != null) {
-                action.accept(sender, args);
-            }
-
-        }
-
-
-
+    public SubCommand(MCommand command, Predicate<CommandArg[]> argLength) {
+        super(command, argLength);
+        requirements = new LinkedHashSet<>(Arrays.asList(setRequirements()));
+        children = requirements.stream()
+                .filter(req -> req instanceof SubCommand).map(req -> (SubCommand)req)
+                .collect(Collectors.toSet());
     }
+
+    @Override
+    public MCommand getCommand() {
+        return super.getCommand();
+    }
+
+    public Set<Requirement> getRequirements() {
+        return requirements;
+    }
+
+    public Set<SubCommand> getChildren() {
+        return children;
+    }
+
+    public boolean isParent() {
+        return !children.isEmpty();
+    }
+
+    public void sendUsage(CommandSender sender, CommandArg[] args) {
+        sender.sendMessage("&9/" + this.getName() + " &eUsages: ");
+        for(Requirement reqs : this.getRequirements()) {
+            if(reqs.getArgsCondition().test(args)) {
+                sender.sendMessage(FormatUtils.color("&7&l- " + reqs.getUsage()));
+            }
+        }
+    }
+
+    public abstract String getName();
+
+    public abstract String getPermission();
+
+    public abstract String getDescription();
+
+    public abstract int getPosition();
+
+    public abstract Requirement[] setRequirements();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof SubCommand)) return false;
+        if (!super.equals(o)) return false;
+        SubCommand that = (SubCommand) o;
+        return getName().equals(that.getName()) && getPosition() == that.getPosition() &&
+                Objects.equal(getRequirements(), that.getRequirements()) &&
+                Objects.equal(getChildren(), that.getChildren());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(super.hashCode(), getName(),
+                getPosition(), getRequirements(), getChildren());
+    }
+
 
 }

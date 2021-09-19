@@ -1,6 +1,7 @@
 package dev.mqzn.lib.menus;
 
 import dev.mqzn.lib.menus.items.MenuItem;
+
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,7 +13,7 @@ public abstract class MultiContentsMenu extends PaginatedMenu {
 
     public MultiContentsMenu() {
         cachedItems = this.getTotalItems();
-        cachedPages = this.calculatePages();
+        cachedPages = this.setPages();
     }
 
     public List<MenuItem> getCachedItems() {
@@ -37,7 +38,7 @@ public abstract class MultiContentsMenu extends PaginatedMenu {
     /*
         It may be a little heavy but it's the best option here
      */
-    public Map<Integer, BigMenuPage<? extends MultiContentsMenu>> calculatePages() {
+    public Map<Integer, BigMenuPage<? extends MultiContentsMenu>> setPages() {
 
         Map<Integer, BigMenuPage<? extends MultiContentsMenu>> pages = new ConcurrentHashMap<>();
 

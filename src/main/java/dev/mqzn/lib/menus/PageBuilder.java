@@ -1,9 +1,10 @@
 package dev.mqzn.lib.menus;
 
 import dev.mqzn.lib.menus.items.MenuItem;
+
 import java.util.Map;
 
-public class PageBuilder<M extends PreCreatedPaginatedMenu> {
+public class PageBuilder<M extends PaginatedMenu> {
 
     private final MenuPage<M> menuPage;
 

@@ -1,19 +1,35 @@
 package dev.mqzn.lib.menus;
 
-public abstract class StretchableMenu extends Menu implements IStretchableMenu{
+public abstract class StretchableMenu extends Menu{
 
+    private final int rows;
     public StretchableMenu() {
         super();
+        rows = buildRows();
     }
 
-    @Override
-    public int getItemsSize() {
-        return getCachedItems().size();
+    private int buildRows() {
+        int capacity = this.getCachedItems().size();
+        final int MAX_ITEMS_PER_ROW = 9;
+
+        if(capacity <= MAX_ITEMS_PER_ROW) return 1;
+        if(capacity > 54) capacity = 54;
+
+        int computedRows = 0;
+
+        while (capacity >= MAX_ITEMS_PER_ROW) {
+            computedRows++;
+            capacity -= MAX_ITEMS_PER_ROW;
+        }
+
+        //Alternative solution, but i love  the while loop XD
+        // computedRows = Math.round( (double)capacity/MAX_ITEMS_PER_ROW);
+        return computedRows;
     }
 
     @Override
     public int getRows() {
-        return stretchedRows();
+        return rows;
     }
 
 

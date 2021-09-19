@@ -3,6 +3,9 @@ package dev.mqzn.lib.commands.api;
 public interface ArgumentParser<T> {
 
 
+
+    boolean matches(String arg);
+
     /**
      *
      * parse the object

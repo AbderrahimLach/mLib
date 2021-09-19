@@ -7,37 +7,38 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+
 import java.util.Map;
 
 public abstract class LinkedMenu extends Menu {
 
-    private final Map<Integer, CachedLinkMenu> linkedSlots;
+    private final Map<Integer, MenuLink> linkedSlots;
 
     public LinkedMenu() {
         linkedSlots = this.initializeLinkedSlots();
     }
 
-    public LinkedMenu(Map<Integer, CachedLinkMenu> linkedSlots) {
+    public LinkedMenu(Map<Integer, MenuLink> linkedSlots) {
         this.linkedSlots = linkedSlots;
     }
 
 
-    public abstract Map<Integer, CachedLinkMenu> initializeLinkedSlots();
+    public abstract Map<Integer, MenuLink> initializeLinkedSlots();
 
 
     public void addMenuLink(int slot, IMenu IMenu) {
-        linkedSlots.put(slot, new CachedLinkMenu(slot, IMenu));
+        linkedSlots.put(slot, new MenuLink(slot, IMenu));
     }
 
 
-    public CachedLinkMenu getLinkIn(int slot) {
+    public MenuLink getLinkIn(int slot) {
         return linkedSlots.getOrDefault(slot, null);
     }
 
 
     public void linkTo(Player clicker, int slot) {
 
-        CachedLinkMenu linkMenu = getLinkIn(slot);
+        MenuLink linkMenu = getLinkIn(slot);
         if(linkMenu == null || linkMenu.getSlot() != slot) return;
 
         IMenu target = linkMenu.getIMenu();
@@ -82,7 +83,6 @@ public abstract class LinkedMenu extends Menu {
         }
 
         if(linkedSlots.containsKey(slotClicked)) {
-            System.out.println("LINKING TO SLOT " + slotClicked);
             this.linkTo(player, slotClicked);
             e.setCancelled(true);
             return;
@@ -96,12 +96,12 @@ public abstract class LinkedMenu extends Menu {
 
 
 
-    protected static final class CachedLinkMenu {
+    protected static final class MenuLink {
 
         private final int slot;
         private final IMenu IMenu;
 
-        private CachedLinkMenu(int slot, IMenu IMenu) {
+        private MenuLink(int slot, IMenu IMenu) {
             this.slot = slot;
             this.IMenu = IMenu;
         }
@@ -115,15 +115,15 @@ public abstract class LinkedMenu extends Menu {
         }
 
 
-        public static CachedLinkMenu of(int slot, IMenu IMenu) {
-            return new CachedLinkMenu(slot, IMenu);
+        public static MenuLink of(int slot, IMenu IMenu) {
+            return new MenuLink(slot, IMenu);
         }
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof CachedLinkMenu)) return false;
-            CachedLinkMenu that = (CachedLinkMenu) o;
+            if (!(o instanceof MenuLink)) return false;
+            MenuLink that = (MenuLink) o;
             return getSlot() == that.getSlot() &&
                     Objects.equal(getIMenu(), that.getIMenu());
         }

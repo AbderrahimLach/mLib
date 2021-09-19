@@ -2,19 +2,20 @@ package dev.mqzn.lib.menus.test;
 
 import dev.mqzn.lib.menus.MenuPage;
 import dev.mqzn.lib.menus.PageBuilder;
-import dev.mqzn.lib.menus.PreCreatedPaginatedMenu;
+import dev.mqzn.lib.menus.PaginatedMenu;
 import dev.mqzn.lib.menus.items.MenuItem;
 import dev.mqzn.lib.utils.FormatUtils;
 import dev.mqzn.lib.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class TestSpecificPaginatedMenu extends PreCreatedPaginatedMenu {
+public class TestSpecificPaginatedMenu extends PaginatedMenu {
 
     @Override
-    public Map<Integer, ? extends MenuPage<? extends PreCreatedPaginatedMenu>> calculatePages() {
+    public Map<Integer, ? extends MenuPage<? extends PaginatedMenu>> setPages() {
 
         Map<Integer, MenuPage<TestSpecificPaginatedMenu>> map = new HashMap<>();
 

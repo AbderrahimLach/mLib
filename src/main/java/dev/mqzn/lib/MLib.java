@@ -1,13 +1,11 @@
 package dev.mqzn.lib;
 
 import dev.mqzn.lib.commands.test.OpenMenuCommand;
-import dev.mqzn.lib.commands.test.SubsCommand;
 import dev.mqzn.lib.managers.CommandManager;
 import dev.mqzn.lib.managers.HologramManager;
 import dev.mqzn.lib.managers.MenuManager;
 import dev.mqzn.lib.menus.listeners.MenuListener;
 import org.bukkit.Bukkit;
-import org.bukkit.permissions.Permission;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class MLib extends JavaPlugin {
@@ -28,20 +26,13 @@ public final class MLib extends JavaPlugin {
         commandManager = new CommandManager();
         hologramManager = new HologramManager();
 
-        PluginHandler.getPlugins().forEach(p -> {
-            if(p != null) {
-                p.registerCommands();
-                for(Permission permission : p.getPermissions()) {
-                    Bukkit.getPluginManager().addPermission(permission);
-                }
-            }
-        });
-
+        //mLib test commands
         commandManager.registerCommand(new OpenMenuCommand());
-        commandManager.registerCommand(new SubsCommand());
-        commandManager.handleRegistries();
 
+        //mLib menu listener
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
+
+
     }
 
     @Override

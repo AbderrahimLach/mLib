@@ -5,16 +5,14 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Objects;
 
 public class ActionBar {
 
-    private Class<?> nmsChatSerializer;
-    private Class<?> nmsPacketTitle;
-    private Class<?> nmsPacketChat;
-    private Class<?> nmsChatBaseComponent;
+    private Class<?> nmsChatSerializer, nmsPacketTitle, nmsPacketChat, nmsChatBaseComponent;
     private Object nmsIChatBaseComponent;
 
     private final JavaPlugin plugin;

@@ -5,16 +5,17 @@ import dev.mqzn.lib.menus.items.MenuItem;
 import dev.mqzn.lib.utils.FormatUtils;
 import dev.mqzn.lib.utils.ItemBuilder;
 import org.bukkit.Material;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class TestLinkedMenu extends LinkedMenu {
 
     @Override
-    public Map<Integer, CachedLinkMenu> initializeLinkedSlots() {
+    public Map<Integer, MenuLink> initializeLinkedSlots() {
 
-        Map<Integer, CachedLinkMenu> map = new HashMap<>();
-        map.put(4, CachedLinkMenu.of(4, new TestMenu()));
+        Map<Integer, MenuLink> map = new HashMap<>();
+        map.put(4, MenuLink.of(4, new TestMenu()));
 
         return map;
     }
