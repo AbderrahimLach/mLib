@@ -27,6 +27,14 @@ public class CommandManager {
 
         //initialization
 
+        /*
+             Duel -> uuid1, uuid2
+             Duel -> Arena
+             Duel -> Kit
+             Duel -> STATE
+             Duel ->
+         */
+
         this.commands = new HashMap<>();
         try {
             Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");

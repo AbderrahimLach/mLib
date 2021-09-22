@@ -31,7 +31,7 @@ public class IP {
         if (this == o) return true;
         if (!(o instanceof IP)) return false;
         IP ip1 = (IP) o;
-        return Objects.equal(ip, ip1.ip);
+        return Objects.equal(this.toString(), ip1.toString());
     }
 
     @Override

@@ -41,7 +41,7 @@ public abstract class SubCommand extends Requirement {
     }
 
     public void sendUsage(CommandSender sender, CommandArg[] args) {
-        sender.sendMessage("&9/" + this.getName() + " &eUsages: ");
+        sender.sendMessage(FormatUtils.color("&9/" + this.getName() + " &eUsages: "));
         for(Requirement reqs : this.getRequirements()) {
             if(reqs.getArgsCondition().test(args)) {
                 sender.sendMessage(FormatUtils.color("&7&l- " + reqs.getUsage()));
