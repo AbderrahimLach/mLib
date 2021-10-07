@@ -1,11 +1,11 @@
 package dev.mqzn.lib.utils;
 
-
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -74,27 +74,16 @@ public class ItemBuilder {
         return instance;
     }
 
-    public ItemBuilder addEnchants(Enchantment... enchants) {
-        this.enchants = enchants;
-        return instance;
-    }
-
-    public ItemBuilder setEnchantLevels(int... levels) {
-
-        if(levels == null) return instance;
-
-        if(enchants.length >= 1) {
-
-            ItemMeta meta = itemStack.getItemMeta();
-
-            for (int i = 0; i < enchants.length ; i++) {
-                meta.addEnchant(enchants[i], levels[i], true);
-            }
-            itemStack.setItemMeta(meta);
+    public ItemBuilder addEnchants(ItemEnchant... enchants) {
+        ItemMeta meta = itemStack.getItemMeta();
+        for (ItemEnchant itemEnchant : enchants) {
+            meta.addEnchant(itemEnchant.getEnchantment(), itemEnchant.getLevel(), true);
         }
+        itemStack.setItemMeta(meta);
 
         return instance;
     }
+
 
 
 
