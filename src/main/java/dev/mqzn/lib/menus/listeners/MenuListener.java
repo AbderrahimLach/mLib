@@ -3,6 +3,7 @@ package dev.mqzn.lib.menus.listeners;
 import dev.mqzn.lib.MLib;
 import dev.mqzn.lib.menus.Menu;
 import dev.mqzn.lib.menus.events.MenuCloseEvent;
+import dev.mqzn.lib.menus.events.MenuContentChangeEvent;
 import dev.mqzn.lib.menus.events.MenuOpenEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -45,5 +46,13 @@ public class MenuListener implements Listener {
         if(m != null) m.parseOnClick(e);
     }
 
+
+    @EventHandler
+    public void onContentChange(MenuContentChangeEvent e) {
+        e.commitUpdates();
+
+        //FOR DEBUG ONLY
+        System.out.println("UPDATED MENU" + e.getUpdatedMenu().getUniqueName());
+    }
 
 }

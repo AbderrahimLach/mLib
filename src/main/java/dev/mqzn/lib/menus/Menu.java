@@ -2,6 +2,7 @@ package dev.mqzn.lib.menus;
 
 import com.google.common.base.Objects;
 import dev.mqzn.lib.MLib;
+import dev.mqzn.lib.menus.events.MenuContentChangeEvent;
 import dev.mqzn.lib.menus.items.MenuItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -14,17 +15,29 @@ import java.util.Map;
 
 public abstract class Menu implements IMenu {
 
-    private final Map<Integer, MenuItem> contents;
+    private  Map<Integer, MenuItem> contents;
 
     public Menu() {
         contents = this.getContents();
     }
 
 
+    public void setContents(Map<Integer, MenuItem> contents) {
+        this.contents = contents;
+    }
+
     public abstract int getRows();
 
     public void setItem(MenuItem item) {
+        Map<Integer, MenuItem> old = contents;
         contents.put(item.getSlot(), item);
+        if(isOpenForAnyone()) {
+            Bukkit.getPluginManager().callEvent(new MenuContentChangeEvent(this, old, contents));
+        }
+    }
+
+    private boolean isOpenForAnyone() {
+        return MLib.getInstance().getMenuManager().getOpenMenus().containsValue(this);
     }
 
     public Map<Integer, MenuItem> getCachedItems() {
