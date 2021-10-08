@@ -1,6 +1,5 @@
 package dev.mqzn.lib.managers;
 
-import dev.mqzn.lib.menus.IMenu;
 import dev.mqzn.lib.menus.Menu;
 
 import java.util.Map;
