@@ -61,7 +61,9 @@ public class Board {
             return scoreboard.getObjective("mBoard");
         }
 
-        return sc
+        obj = scoreboard.registerNewObjective("big", "ass");
+
+        return obj;
     }
 
 
