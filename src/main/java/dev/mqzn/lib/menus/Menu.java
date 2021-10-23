@@ -2,7 +2,7 @@ package dev.mqzn.lib.menus;
 
 import com.google.common.base.Objects;
 import dev.mqzn.lib.MLib;
-import dev.mqzn.lib.menus.events.MenuContentChangeEvent;
+import dev.mqzn.lib.managers.MenuManager;
 import dev.mqzn.lib.menus.items.MenuItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -12,6 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
+import java.util.UUID;
 
 public abstract class Menu implements IMenu {
 
@@ -29,10 +30,23 @@ public abstract class Menu implements IMenu {
     public abstract int getRows();
 
     public void setItem(MenuItem item) {
-        Map<Integer, MenuItem> old = contents;
         contents.put(item.getSlot(), item);
+
         if(isOpenForAnyone()) {
-            Bukkit.getPluginManager().callEvent(new MenuContentChangeEvent(this, old, contents));
+            MenuManager menuManager = MLib.getInstance().getMenuManager();
+
+            for(Player player : Bukkit.getOnlinePlayers()) {
+
+                UUID id = player.getUniqueId();
+                if(menuManager.getOpenMenu(id) == null || !menuManager.getOpenMenu(id).equals(this)) continue;
+
+                //registering player with new menu
+                menuManager.unregister(id);
+                player.closeInventory();
+
+                this.open(player);
+                player.updateInventory();
+            }
         }
     }
 

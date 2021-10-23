@@ -7,11 +7,21 @@ public class Argument {
     private final String name;
     private final int position;
     private final Class<?> typeClass;
+    private final ArgumentType argumentType;
 
-    public Argument(String name, int position, Class<?> typeClass) {
+    public Argument(String name, int position, Class<?> typeClass, ArgumentType argumentType) {
         this.name = name;
         this.position = position;
         this.typeClass = typeClass;
+        this.argumentType = argumentType;
+    }
+
+    public ArgumentType getArgumentType() {
+        return argumentType;
+    }
+
+    public String fullName() {
+        return argumentType.getPrefix() + name + argumentType.getSuffix();
     }
 
     public String getName() {
@@ -46,4 +56,26 @@ public class Argument {
         return "<" + this.getName().toUpperCase() + "> ";
     }
 
+
+    public enum ArgumentType {
+
+        OPTIONAL("[", "]"),
+        REQUIRED("<", ">");
+
+        private final String prefix, suffix;
+
+        ArgumentType(String prefix, String suffix) {
+            this.prefix = prefix;
+            this.suffix = suffix;
+        }
+
+        public String getPrefix() {
+            return prefix;
+        }
+
+        public String getSuffix() {
+            return suffix;
+        }
+
+    }
 }

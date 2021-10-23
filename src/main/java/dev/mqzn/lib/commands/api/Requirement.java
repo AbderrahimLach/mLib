@@ -50,8 +50,8 @@ public class Requirement {
         return actions;
     }
 
-    public void setArg(String argName, int argPosition, Class<?> argClassType) {
-        argParses.put(argPosition, new Argument(argName, argPosition, argClassType));
+    public void setArg(String argName, int argPosition, Class<?> argClassType, Argument.ArgumentType type) {
+        argParses.put(argPosition, new Argument(argName, argPosition, argClassType, type));
     }
 
     public String getUsage() {

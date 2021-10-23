@@ -1,6 +1,5 @@
 package dev.mqzn.lib;
 
-import dev.mqzn.lib.commands.test.OpenMenuCommand;
 import dev.mqzn.lib.managers.CommandManager;
 import dev.mqzn.lib.managers.HologramManager;
 import dev.mqzn.lib.managers.MenuManager;
@@ -28,7 +27,7 @@ public final class MLib extends JavaPlugin {
 
         //mLib test commands
         commandManager.registerCommand(new OpenMenuCommand());
-
+        commandManager.registerCommand(new EditMenuCommand());
         //mLib menu listener
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
 

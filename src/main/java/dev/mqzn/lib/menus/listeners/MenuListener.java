@@ -3,7 +3,6 @@ package dev.mqzn.lib.menus.listeners;
 import dev.mqzn.lib.MLib;
 import dev.mqzn.lib.menus.Menu;
 import dev.mqzn.lib.menus.events.MenuCloseEvent;
-import dev.mqzn.lib.menus.events.MenuContentChangeEvent;
 import dev.mqzn.lib.menus.events.MenuOpenEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -28,8 +27,8 @@ public class MenuListener implements Listener {
     public void onOpen(InventoryOpenEvent e) {
 
         Player player = (Player) e.getPlayer();
-        Menu IMenu = MLib.getInstance().getMenuManager().getOpenMenus().get(player.getUniqueId());
-        Bukkit.getPluginManager().callEvent(new MenuOpenEvent(player, IMenu));
+        Menu m = MLib.getInstance().getMenuManager().getOpenMenus().get(player.getUniqueId());
+        Bukkit.getPluginManager().callEvent(new MenuOpenEvent(player, m));
 
     }
 
@@ -47,12 +46,5 @@ public class MenuListener implements Listener {
     }
 
 
-    @EventHandler
-    public void onContentChange(MenuContentChangeEvent e) {
-        e.commitUpdates();
-
-        //FOR DEBUG ONLY
-        System.out.println("UPDATED MENU" + e.getUpdatedMenu().getUniqueName());
-    }
 
 }

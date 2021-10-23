@@ -1,7 +1,6 @@
 package dev.mqzn.lib.utils;
 
 import org.bukkit.Material;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -12,26 +11,16 @@ import java.util.List;
 public class ItemBuilder {
 
     private ItemStack itemStack;
-    private Enchantment[] enchants = new Enchantment[0];
 
-    private static ItemBuilder instance;
-
-    public static ItemBuilder construct() {
-        if(instance == null) {
-            instance = new ItemBuilder();
-        }
-        return instance;
-
-    }
 
     public ItemBuilder create(Material material, int amount) {
         itemStack = new ItemStack(material, amount);
-        return instance;
+        return this;
     }
 
     public ItemBuilder create(Material material, int amount, short damage) {
         itemStack = new ItemStack(material, amount, damage);
-        return instance;
+        return this;
     }
 
     public ItemBuilder setDisplay(String name) {
@@ -39,7 +28,7 @@ public class ItemBuilder {
         meta.setDisplayName(FormatUtils.color(name));
         itemStack.setItemMeta(meta);
 
-        return instance;
+        return this;
     }
 
     public ItemBuilder setLore(String... lore) {
@@ -47,7 +36,7 @@ public class ItemBuilder {
         meta.setLore(FormatUtils.colorList(Arrays.asList(lore)));
         itemStack.setItemMeta(meta);
 
-        return instance;
+        return this;
     }
 
     public ItemBuilder setLore(List<String> lore) {
@@ -55,7 +44,7 @@ public class ItemBuilder {
         meta.setLore(FormatUtils.colorList(lore));
         itemStack.setItemMeta(meta);
 
-        return instance;
+        return this;
     }
 
     public ItemBuilder addFlags(ItemFlag... flags) {
@@ -63,7 +52,7 @@ public class ItemBuilder {
         meta.addItemFlags(flags);
         itemStack.setItemMeta(meta);
 
-        return instance;
+        return this;
     }
 
     public ItemBuilder setUnbreakable(boolean unbreakable) {
@@ -71,7 +60,7 @@ public class ItemBuilder {
         meta.spigot().setUnbreakable(unbreakable);
         itemStack.setItemMeta(meta);
 
-        return instance;
+        return this;
     }
 
     public ItemBuilder addEnchants(ItemEnchant... enchants) {
@@ -81,16 +70,9 @@ public class ItemBuilder {
         }
         itemStack.setItemMeta(meta);
 
-        return instance;
+        return this;
     }
 
-
-
-
-    public ItemStack build() {
-        instance = null;  // clean up
-        return itemStack;
-    }
 
 
 }
