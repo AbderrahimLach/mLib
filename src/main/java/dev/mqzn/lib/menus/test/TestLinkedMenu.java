@@ -40,8 +40,7 @@ public class TestLinkedMenu extends LinkedMenu {
 
         Map<Integer, MenuItem> map = new HashMap<>();
 
-        map.put(4, new MenuItem(ItemBuilder.construct()
-                .create(Material.BEDROCK, 1)
+        map.put(4, new MenuItem(new ItemBuilder(Material.BEDROCK, 1)
                 .setDisplay("&6TEST LINKED MENU").build(), 4, (p, item) -> {
 
             String msg;

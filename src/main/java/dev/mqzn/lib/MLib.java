@@ -25,9 +25,6 @@ public final class MLib extends JavaPlugin {
         commandManager = new CommandManager();
         hologramManager = new HologramManager();
 
-        //mLib test commands
-        commandManager.registerCommand(new OpenMenuCommand());
-        commandManager.registerCommand(new EditMenuCommand());
         //mLib menu listener
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
 

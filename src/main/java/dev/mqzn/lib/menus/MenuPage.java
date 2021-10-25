@@ -6,6 +6,7 @@ import dev.mqzn.lib.menus.items.MenuItem;
 import dev.mqzn.lib.utils.FormatUtils;
 import dev.mqzn.lib.utils.ItemBuilder;
 import org.bukkit.Material;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
     private void setPageItems(M menu) {
         String display = "&aNext Page >>";
 
-        MenuItem NEXT_PAGE = new MenuItem(ItemBuilder.construct().create(Material.ARROW, 1)
+        MenuItem NEXT_PAGE = new MenuItem(new ItemBuilder(Material.ARROW, 1)
                 .setDisplay(display).build(), this.getSize()-1, ((player, itemStack) -> {
 
             try {
@@ -58,7 +59,7 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
 
         display = "&e<< Previous Page";
 
-        MenuItem PREVIOUS_PAGE = new MenuItem(ItemBuilder.construct().create(Material.ARROW, 1)
+        MenuItem PREVIOUS_PAGE = new MenuItem(new ItemBuilder(Material.ARROW, 1)
                 .setDisplay(display).build(), this.getSize()-9, ((player, itemStack) -> {
 
             try {

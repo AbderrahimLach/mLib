@@ -19,10 +19,10 @@ public class TestSpecificPaginatedMenu extends PaginatedMenu {
 
         Map<Integer, MenuPage<TestSpecificPaginatedMenu>> map = new HashMap<>();
 
-        ItemStack it = ItemBuilder.construct().create(Material.BEACON, 1)
+        ItemStack it = new ItemBuilder(Material.BEACON, 1)
                 .setDisplay("&9HELLO").build();
 
-        ItemStack it2 = ItemBuilder.construct().create(Material.DIAMOND, 1)
+        ItemStack it2 = new ItemBuilder(Material.DIAMOND, 1)
                 .setDisplay("&aWelcome").build();
 
         new PageBuilder<>(1, this).setRows(3)

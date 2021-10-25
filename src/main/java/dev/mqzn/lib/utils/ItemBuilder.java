@@ -1,6 +1,7 @@
 package dev.mqzn.lib.utils;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -10,18 +11,24 @@ import java.util.List;
 
 public class ItemBuilder {
 
-    private ItemStack itemStack;
+    private final ItemStack itemStack;
 
+    public ItemBuilder(Material material) {
+        itemStack = new ItemStack(material);
+    }
 
-    public ItemBuilder create(Material material, int amount) {
+    public ItemBuilder(Material material, int amount) {
         itemStack = new ItemStack(material, amount);
-        return this;
     }
 
-    public ItemBuilder create(Material material, int amount, short damage) {
+    public ItemBuilder(Material material, int  amount, short damage) {
         itemStack = new ItemStack(material, amount, damage);
-        return this;
     }
+
+    public ItemBuilder(ItemStack item) {
+        itemStack = new ItemStack(item);
+    }
+
 
     public ItemBuilder setDisplay(String name) {
         ItemMeta meta = itemStack.getItemMeta();
@@ -55,6 +62,14 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder removeFlags(ItemFlag... flags) {
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.removeItemFlags(flags);
+        itemStack.setItemMeta(meta);
+
+        return this;
+    }
+
     public ItemBuilder setUnbreakable(boolean unbreakable) {
         ItemMeta meta = itemStack.getItemMeta();
         meta.spigot().setUnbreakable(unbreakable);
@@ -73,6 +88,20 @@ public class ItemBuilder {
         return this;
     }
 
+    public ItemBuilder removeEnchants(Enchantment... enchantments) {
+        ItemMeta meta = itemStack.getItemMeta();
+        for(Enchantment e : enchantments) {
+            meta.removeEnchant(e);
+        }
+        itemStack.setItemMeta(meta);
+        return this;
+    }
+
+
+
+    public ItemStack build() {
+        return itemStack;
+    }
 
 
 }

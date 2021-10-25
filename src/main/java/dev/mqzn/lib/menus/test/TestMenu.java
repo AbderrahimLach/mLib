@@ -32,7 +32,7 @@ public class TestMenu extends Menu {
     public Map<Integer, MenuItem> getContents() {
 
         Map<Integer, MenuItem> items = new HashMap<>();
-        ItemStack it = ItemBuilder.construct().create(Material.BEACON, 1)
+        ItemStack it = new ItemBuilder(Material.BEACON, 1)
                 .setDisplay("&9HELLO").build();
 
 
