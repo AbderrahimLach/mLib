@@ -6,9 +6,8 @@
 
     <groupId>dev.mqzn.lib</groupId>
     <artifactId>mLib</artifactId>
-    <version>1.0.1</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
-
     <name>mLib</name>
 
     <description>The Ultimate Lib for spigot api</description>
