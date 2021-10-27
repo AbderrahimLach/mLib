@@ -1,7 +1,7 @@
 package dev.mqzn.lib.commands.api;
 
 import com.google.common.base.Objects;
-import dev.mqzn.lib.utils.FormatUtils;
+import dev.mqzn.lib.utils.Translator;
 import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
@@ -41,10 +41,10 @@ public abstract class SubCommand extends Requirement {
     }
 
     public void sendUsage(CommandSender sender, CommandArg[] args) {
-        sender.sendMessage(FormatUtils.color("&9/" + this.getName() + " &eUsages: "));
+        sender.sendMessage(Translator.color("&9/" + this.getName() + " &eUsages: "));
         for(Requirement reqs : this.getRequirements()) {
             if(reqs.getArgsCondition().test(args)) {
-                sender.sendMessage(FormatUtils.color("&7&l- " + reqs.getUsage()));
+                sender.sendMessage(Translator.color("&7&l- " + reqs.getUsage()));
             }
         }
     }

@@ -1,7 +1,7 @@
 package dev.mqzn.lib.menus;
 
 import com.google.common.base.Objects;
-import dev.mqzn.lib.MLib;
+import dev.mqzn.lib.mLib;
 import dev.mqzn.lib.managers.MenuManager;
 import dev.mqzn.lib.menus.items.MenuItem;
 import org.bukkit.Bukkit;
@@ -33,7 +33,7 @@ public abstract class Menu implements IMenu {
         contents.put(item.getSlot(), item);
 
         if(isOpenForAnyone()) {
-            MenuManager menuManager = MLib.getInstance().getMenuManager();
+            MenuManager menuManager = mLib.getInstance().getMenuManager();
 
             for(Player player : Bukkit.getOnlinePlayers()) {
 
@@ -51,7 +51,7 @@ public abstract class Menu implements IMenu {
     }
 
     private boolean isOpenForAnyone() {
-        return MLib.getInstance().getMenuManager().getOpenMenus().containsValue(this);
+        return mLib.getInstance().getMenuManager().getOpenMenus().containsValue(this);
     }
 
     public Map<Integer, MenuItem> getCachedItems() {
@@ -84,7 +84,7 @@ public abstract class Menu implements IMenu {
     }
 
     public void open(Player viewer) {
-        MLib.getInstance().getMenuManager().register(viewer.getUniqueId(), this);
+        mLib.getInstance().getMenuManager().register(viewer.getUniqueId(), this);
         viewer.openInventory(buildInv());
     }
 

@@ -32,7 +32,7 @@ public class ItemBuilder {
 
     public ItemBuilder setDisplay(String name) {
         ItemMeta meta = itemStack.getItemMeta();
-        meta.setDisplayName(FormatUtils.color(name));
+        meta.setDisplayName(Translator.color(name));
         itemStack.setItemMeta(meta);
 
         return this;
@@ -40,7 +40,7 @@ public class ItemBuilder {
 
     public ItemBuilder setLore(String... lore) {
         ItemMeta meta = itemStack.getItemMeta();
-        meta.setLore(FormatUtils.colorList(Arrays.asList(lore)));
+        meta.setLore(Translator.colorList(Arrays.asList(lore)));
         itemStack.setItemMeta(meta);
 
         return this;
@@ -48,7 +48,7 @@ public class ItemBuilder {
 
     public ItemBuilder setLore(List<String> lore) {
         ItemMeta meta = itemStack.getItemMeta();
-        meta.setLore(FormatUtils.colorList(lore));
+        meta.setLore(Translator.colorList(lore));
         itemStack.setItemMeta(meta);
 
         return this;

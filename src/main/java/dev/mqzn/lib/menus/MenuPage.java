@@ -3,8 +3,8 @@ package dev.mqzn.lib.menus;
 import com.google.common.base.Objects;
 import dev.mqzn.lib.menus.exceptions.MenuPageOutOfBounds;
 import dev.mqzn.lib.menus.items.MenuItem;
-import dev.mqzn.lib.utils.FormatUtils;
 import dev.mqzn.lib.utils.ItemBuilder;
+import dev.mqzn.lib.utils.Translator;
 import org.bukkit.Material;
 
 import java.util.HashMap;
@@ -53,7 +53,7 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
             } catch (MenuPageOutOfBounds ex) {
                 ex.printStackTrace();
                 player.closeInventory();
-                player.sendMessage(FormatUtils.color("&cThis is the last page, no next pages !"));
+                player.sendMessage(Translator.color("&cThis is the last page, no next pages !"));
             }
         }));
 
@@ -67,7 +67,7 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
             } catch (MenuPageOutOfBounds ex) {
                 ex.printStackTrace();
                 player.closeInventory();
-                player.sendMessage(FormatUtils.color("&cThis is the first page, no previous pages !"));
+                player.sendMessage(Translator.color("&cThis is the first page, no previous pages !"));
             }
 
         }));

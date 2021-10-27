@@ -1,7 +1,7 @@
 package dev.mqzn.lib.commands.api.args;
 
 import com.google.common.base.Objects;
-import dev.mqzn.lib.MLib;
+import dev.mqzn.lib.mLib;
 
 public class IP {
 
@@ -22,7 +22,7 @@ public class IP {
     }
 
     public static boolean isIP(String ipArg) {
-        return MLib.getInstance().getCommandManager()
+        return mLib.getInstance().getCommandManager()
                 .getArgumentParser(IP.class).matches(ipArg);
     }
 

@@ -1,6 +1,6 @@
 package dev.mqzn.lib.menus.listeners;
 
-import dev.mqzn.lib.MLib;
+import dev.mqzn.lib.mLib;
 import dev.mqzn.lib.menus.Menu;
 import dev.mqzn.lib.menus.events.MenuCloseEvent;
 import dev.mqzn.lib.menus.events.MenuOpenEvent;
@@ -18,7 +18,7 @@ public class MenuListener implements Listener {
     public void onClose(InventoryCloseEvent e) {
 
         Player player = (Player) e.getPlayer();
-        Menu m = MLib.getInstance().getMenuManager().getOpenMenus().get(player.getUniqueId());
+        Menu m = mLib.getInstance().getMenuManager().getOpenMenus().get(player.getUniqueId());
         Bukkit.getPluginManager().callEvent(new MenuCloseEvent(player, m));
 
     }
@@ -27,21 +27,21 @@ public class MenuListener implements Listener {
     public void onOpen(InventoryOpenEvent e) {
 
         Player player = (Player) e.getPlayer();
-        Menu m = MLib.getInstance().getMenuManager().getOpenMenus().get(player.getUniqueId());
+        Menu m = mLib.getInstance().getMenuManager().getOpenMenus().get(player.getUniqueId());
         Bukkit.getPluginManager().callEvent(new MenuOpenEvent(player, m));
 
     }
 
     @EventHandler
     public void onMenuClose(MenuCloseEvent e) {
-        MLib.getInstance().getMenuManager().unregister(e.getPlayer().getUniqueId());
+        mLib.getInstance().getMenuManager().unregister(e.getPlayer().getUniqueId());
     }
 
     @EventHandler
     public void onClick(InventoryClickEvent e) {
         Player player = (Player)e.getWhoClicked();
 
-        Menu m = MLib.getInstance().getMenuManager().getOpenMenu(player.getUniqueId());
+        Menu m = mLib.getInstance().getMenuManager().getOpenMenu(player.getUniqueId());
         if(m != null) m.parseOnClick(e);
     }
 

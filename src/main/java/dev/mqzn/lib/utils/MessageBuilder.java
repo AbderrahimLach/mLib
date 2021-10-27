@@ -12,7 +12,7 @@ public class MessageBuilder {
     private final TextComponent text;
 
     private MessageBuilder(String msg) {
-        text = new TextComponent(FormatUtils.color(msg));
+        text = new TextComponent(Translator.color(msg));
     }
 
     public static MessageBuilder create(String msg) {
@@ -20,16 +20,16 @@ public class MessageBuilder {
     }
 
     public MessageBuilder append(String msg) {
-        text.addExtra(new TextComponent(FormatUtils.color(msg)));
+        text.addExtra(new TextComponent(Translator.color(msg)));
         return this;
     }
 
     public  MessageBuilder appendHover(String msg, String hoverMsg) {
 
-        TextComponent txt = new TextComponent(FormatUtils.color(msg));
+        TextComponent txt = new TextComponent(Translator.color(msg));
 
         txt.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                new ComponentBuilder(FormatUtils.color(hoverMsg)).create()));
+                new ComponentBuilder(Translator.color(hoverMsg)).create()));
 
         text.addExtra(txt);
 
@@ -41,7 +41,7 @@ public class MessageBuilder {
         TextComponent txt = new TextComponent(msg);
 
         txt.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT,
-                new ComponentBuilder(FormatUtils.color(hoverMsg)).create()));
+                new ComponentBuilder(Translator.color(hoverMsg)).create()));
 
         txt.setClickEvent(new ClickEvent(action, actionValue));
 

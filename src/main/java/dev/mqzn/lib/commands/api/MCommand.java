@@ -1,8 +1,8 @@
 package dev.mqzn.lib.commands.api;
 
-import dev.mqzn.lib.MLib;
+import dev.mqzn.lib.mLib;
 import dev.mqzn.lib.managers.CommandManager;
-import dev.mqzn.lib.utils.FormatUtils;
+import dev.mqzn.lib.utils.Translator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -17,8 +17,8 @@ public abstract class MCommand extends Command {
     static String NO_PERMISSION, ONLY_PLAYER;
 
     static {
-        NO_PERMISSION = FormatUtils.color("&cAccess denied to the command");
-        ONLY_PLAYER = FormatUtils.color("&cOnly players can do this !");
+        NO_PERMISSION = Translator.color("&cAccess denied to the command");
+        ONLY_PLAYER = Translator.color("&cOnly players can do this !");
     }
 
     private final String permission;
@@ -67,7 +67,7 @@ public abstract class MCommand extends Command {
             Class<?> clazz = CommandManager.getClazzType(arg);
 
             commandArgs[i] = new CommandArg(i,
-                    MLib.getInstance().getCommandManager()
+                    mLib.getInstance().getCommandManager()
                             .getArgumentParser(clazz).parse(arg), arg);
 
         }
@@ -87,7 +87,7 @@ public abstract class MCommand extends Command {
             sender.sendMessage("&9/" + this.getName() + " &eUsages: ");
             for(Requirement reqs : requirements) {
                 if(reqs.getArgsCondition().test(args)) {
-                    sender.sendMessage(FormatUtils.color("&7&l- " + reqs.getUsage()));
+                    sender.sendMessage(Translator.color("&7&l- " + reqs.getUsage()));
                 }
             }
             return;
@@ -181,7 +181,7 @@ public abstract class MCommand extends Command {
 
                 CommandArg arg = args[argEntry.getKey()];
                 Argument wanted = argEntry.getValue();
-                ArgumentParser<?> parser = MLib.getInstance().getCommandManager()
+                ArgumentParser<?> parser = mLib.getInstance().getCommandManager()
                         .getArgumentParser(wanted.getTypeClass());
 
                 if(!arg.getParsedArg().equals(parser.parse(arg.getArgument()))) {

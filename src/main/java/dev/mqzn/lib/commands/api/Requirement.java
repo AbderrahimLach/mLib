@@ -1,7 +1,7 @@
 package dev.mqzn.lib.commands.api;
 
 import com.google.common.base.Objects;
-import dev.mqzn.lib.utils.FormatUtils;
+import dev.mqzn.lib.utils.Translator;
 import org.bukkit.command.CommandSender;
 
 import java.util.HashMap;
@@ -56,7 +56,7 @@ public class Requirement {
 
     public String getUsage() {
         String rest = argParses.values().stream().map(Argument::toString).collect(Collectors.joining());
-        return FormatUtils.color("&c/" + command.getLabel() + " " + rest);
+        return Translator.color("&c/" + command.getLabel() + " " + rest);
     }
 
     public Map<Integer, Argument> getArgParses() {

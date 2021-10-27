@@ -2,7 +2,7 @@ package dev.mqzn.lib.utils;
 
 import java.util.concurrent.ThreadLocalRandom;
 
-public class NumericUtils {
+public class Numbers {
 
 
     public static boolean isDivisibleBy(int num, int divisor) {

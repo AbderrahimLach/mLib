@@ -2,8 +2,8 @@ package dev.mqzn.lib.menus.test;
 
 import dev.mqzn.lib.menus.Menu;
 import dev.mqzn.lib.menus.items.MenuItem;
-import dev.mqzn.lib.utils.FormatUtils;
 import dev.mqzn.lib.utils.ItemBuilder;
+import dev.mqzn.lib.utils.Translator;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -38,7 +38,7 @@ public class TestMenu extends Menu {
 
         items.put(13, new MenuItem(it, 13, (p, item) -> {
             p.closeInventory();
-            p.sendMessage(FormatUtils.color("&9HELLO &7" + p.getName()));
+            p.sendMessage(Translator.color("&9HELLO &7" + p.getName()));
         }));
 
         return items;

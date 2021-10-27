@@ -1,9 +1,10 @@
 package dev.mqzn.lib.backend;
 
 import com.google.common.base.Objects;
-import dev.mqzn.lib.utils.FormatUtils;
+import dev.mqzn.lib.utils.Translator;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
+
 import java.io.File;
 import java.io.IOException;
 
@@ -20,7 +21,7 @@ public class SpigotFile {
         this.file = new File(plugin.getDataFolder(), fileName);
 
         if(!plugin.getDataFolder().exists() && !plugin.getDataFolder().mkdir()) {
-            Bukkit.getConsoleSender().sendMessage(FormatUtils.color("&cFailed to create the Data Folder for " + plugin.getName()));
+            Bukkit.getConsoleSender().sendMessage(Translator.color("&cFailed to create the Data Folder for " + plugin.getName()));
             return;
         }
 
@@ -43,13 +44,13 @@ public class SpigotFile {
                             fileName + "for " + plugin.getName())
                             : ("&aCreated the file " + fileName + "for " + plugin.getName());
 
-                    Bukkit.getConsoleSender().sendMessage(FormatUtils.color(msg));
+                    Bukkit.getConsoleSender().sendMessage(Translator.color(msg));
                     countOfTries++;
                 } while (!success && countOfTries < 2);
 
                 if (countOfTries >= 2 && !success) {
                     Bukkit.getConsoleSender()
-                            .sendMessage(FormatUtils
+                            .sendMessage(Translator
                                     .color("&cFailed 2 Attempts to create the file " + fileName));
                 }
 

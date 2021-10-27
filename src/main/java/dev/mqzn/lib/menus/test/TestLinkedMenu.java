@@ -2,8 +2,8 @@ package dev.mqzn.lib.menus.test;
 
 import dev.mqzn.lib.menus.LinkedMenu;
 import dev.mqzn.lib.menus.items.MenuItem;
-import dev.mqzn.lib.utils.FormatUtils;
 import dev.mqzn.lib.utils.ItemBuilder;
+import dev.mqzn.lib.utils.Translator;
 import org.bukkit.Material;
 
 import java.util.HashMap;
@@ -51,7 +51,7 @@ public class TestLinkedMenu extends LinkedMenu {
             }
 
             p.closeInventory();
-            p.sendMessage(FormatUtils.color(msg));
+            p.sendMessage(Translator.color(msg));
         }));
 
         return map;

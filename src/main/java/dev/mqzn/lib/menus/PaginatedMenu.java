@@ -1,7 +1,7 @@
 package dev.mqzn.lib.menus;
 
 import com.google.common.base.Objects;
-import dev.mqzn.lib.MLib;
+import dev.mqzn.lib.mLib;
 import dev.mqzn.lib.menus.exceptions.MenuPageOutOfBounds;
 import org.bukkit.entity.Player;
 
@@ -38,7 +38,7 @@ public abstract class PaginatedMenu implements IMenu {
         }
 
         viewer.closeInventory();
-        MLib.getInstance().getMenuManager().register(viewer.getUniqueId(), page);
+        mLib.getInstance().getMenuManager().register(viewer.getUniqueId(), page);
 
         currentPage = pageIndex;
         page.open(viewer);

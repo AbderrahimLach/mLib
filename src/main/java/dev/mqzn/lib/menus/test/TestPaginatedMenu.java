@@ -2,8 +2,8 @@ package dev.mqzn.lib.menus.test;
 
 import dev.mqzn.lib.menus.MultiContentsMenu;
 import dev.mqzn.lib.menus.items.MenuItem;
-import dev.mqzn.lib.utils.FormatUtils;
 import dev.mqzn.lib.utils.ItemBuilder;
+import dev.mqzn.lib.utils.Translator;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
@@ -20,7 +20,7 @@ public class TestPaginatedMenu extends MultiContentsMenu {
         List<MenuItem> items = new ArrayList<>();
         for (int i = 0; i < 5000; i++) {
             items.add(new MenuItem(it, (p, item) ->
-                    p.sendMessage(FormatUtils.color("&7You CLICKED ON " + item.getItemMeta().getDisplayName()))));
+                    p.sendMessage(Translator.color("&7You CLICKED ON " + item.getItemMeta().getDisplayName()))));
         }
 
         return items;

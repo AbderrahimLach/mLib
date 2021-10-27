@@ -1,19 +1,17 @@
 package dev.mqzn.lib;
 
 import dev.mqzn.lib.managers.CommandManager;
-import dev.mqzn.lib.managers.HologramManager;
 import dev.mqzn.lib.managers.MenuManager;
 import dev.mqzn.lib.menus.listeners.MenuListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class MLib extends JavaPlugin {
+public final class mLib extends JavaPlugin {
 
-    private static MLib instance;
+    private static mLib instance;
 
     private MenuManager menuManager;
     private CommandManager commandManager;
-    private HologramManager hologramManager;
 
     @Override
     public void onEnable() {
@@ -23,7 +21,6 @@ public final class MLib extends JavaPlugin {
 
         menuManager = new MenuManager();
         commandManager = new CommandManager();
-        hologramManager = new HologramManager();
 
         //mLib menu listener
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);
@@ -37,12 +34,8 @@ public final class MLib extends JavaPlugin {
         this.reloadConfig();
     }
 
-    public static MLib getInstance() {
+    public static mLib getInstance() {
         return instance;
-    }
-
-    public HologramManager getHologramManager() {
-        return hologramManager;
     }
 
     public MenuManager getMenuManager() {

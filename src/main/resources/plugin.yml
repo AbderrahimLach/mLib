@@ -1,5 +1,5 @@
 name: mLib
 version: ${project.version}
-main: dev.mqzn.lib.MLib
+main: dev.mqzn.lib.mLib
 authors: [Mqzn]
 description: The Ultimate Lib for spigot api

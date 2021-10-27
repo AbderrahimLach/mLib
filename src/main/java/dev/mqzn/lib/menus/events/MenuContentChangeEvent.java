@@ -1,6 +1,6 @@
 package dev.mqzn.lib.menus.events;
 
-import dev.mqzn.lib.MLib;
+import dev.mqzn.lib.mLib;
 import dev.mqzn.lib.managers.MenuManager;
 import dev.mqzn.lib.menus.Menu;
 import org.bukkit.Bukkit;
@@ -30,7 +30,7 @@ public class MenuContentChangeEvent extends Event {
 
     public void commitUpdates() {
 
-        MenuManager menuManager = MLib.getInstance().getMenuManager();
+        MenuManager menuManager = mLib.getInstance().getMenuManager();
 
         for(Player player : Bukkit.getOnlinePlayers()) {
 

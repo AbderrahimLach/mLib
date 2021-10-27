@@ -1,6 +1,5 @@
 package dev.mqzn.lib.managers;
 
-import dev.mqzn.lib.MLib;
 import dev.mqzn.lib.commands.api.ArgumentParser;
 import dev.mqzn.lib.commands.api.MCommand;
 import dev.mqzn.lib.commands.api.args.IP;
@@ -8,6 +7,7 @@ import dev.mqzn.lib.commands.api.identifiers.BooleanParser;
 import dev.mqzn.lib.commands.api.identifiers.DoubleParser;
 import dev.mqzn.lib.commands.api.identifiers.IPParser;
 import dev.mqzn.lib.commands.api.identifiers.IntegerParser;
+import dev.mqzn.lib.mLib;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 
@@ -25,15 +25,6 @@ public class CommandManager {
 
     public CommandManager() {
 
-        //initialization
-
-        /*
-             Duel -> uuid1, uuid2
-             Duel -> Arena
-             Duel -> Kit
-             Duel -> STATE
-             Duel ->
-         */
 
         this.commands = new HashMap<>();
         try {
@@ -110,7 +101,7 @@ public class CommandManager {
 
     public static Class<?> getClazzType(String arg) {
 
-        for(ArgumentParser<?> parser : MLib.getInstance().getCommandManager().getParsers().values()) {
+        for(ArgumentParser<?> parser : mLib.getInstance().getCommandManager().getParsers().values()) {
             if(parser.matches(arg)) {
                 return parser.parse(arg).getClass();
             }
