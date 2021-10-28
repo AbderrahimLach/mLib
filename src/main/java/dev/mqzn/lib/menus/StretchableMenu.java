@@ -1,10 +1,12 @@
 package dev.mqzn.lib.menus;
 
+import java.util.UUID;
+
 public abstract class StretchableMenu extends Menu{
 
     private final int rows;
-    public StretchableMenu() {
-        super();
+    public StretchableMenu(UUID viewer) {
+        super(viewer);
         rows = buildRows();
     }
 

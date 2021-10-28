@@ -3,27 +3,31 @@ package dev.mqzn.lib.menus;
 import com.google.common.base.Objects;
 import dev.mqzn.lib.menus.exceptions.MenuPageOutOfBounds;
 import dev.mqzn.lib.menus.items.MenuItem;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.Map;
+import java.util.UUID;
 
 public abstract class LinkedMenu extends Menu {
 
     private final Map<Integer, MenuLink> linkedSlots;
 
-    public LinkedMenu() {
-        linkedSlots = this.initializeLinkedSlots();
+    public LinkedMenu(UUID viewer) {
+        super(viewer);
+        linkedSlots = this.initializeLinkedSlots(Bukkit.getPlayer(viewer));
     }
 
-    public LinkedMenu(Map<Integer, MenuLink> linkedSlots) {
+    public LinkedMenu(UUID viewer, Map<Integer, MenuLink> linkedSlots) {
+        super(viewer);
         this.linkedSlots = linkedSlots;
     }
 
 
-    public abstract Map<Integer, MenuLink> initializeLinkedSlots();
+    public abstract Map<Integer, MenuLink> initializeLinkedSlots(Player player);
 
 
     public void addMenuLink(int slot, IMenu IMenu) {
@@ -49,7 +53,7 @@ public abstract class LinkedMenu extends Menu {
         if(target instanceof PaginatedMenu) {
             PaginatedMenu paginatedMenu = (PaginatedMenu)target;
             try {
-                paginatedMenu.openPage(clicker, 1);
+                paginatedMenu.openPage( 1);
             } catch (MenuPageOutOfBounds ex) {
                 ex.printStackTrace();
             }
@@ -58,7 +62,7 @@ public abstract class LinkedMenu extends Menu {
         }
         else if(target instanceof Menu) {
 
-            ((Menu)target).open(clicker);
+            ((Menu)target).open();
         }
 
     }
@@ -76,7 +80,7 @@ public abstract class LinkedMenu extends Menu {
 
         int slotClicked = e.getSlot();
 
-        MenuItem registeredItem = getContents().get(slotClicked);
+        MenuItem registeredItem = this.getCachedItems().get(slotClicked);
         if(registeredItem == null) {
             e.setCancelled(true);
             return;

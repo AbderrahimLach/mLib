@@ -1,6 +1,7 @@
 package dev.mqzn.lib.menus;
 
 import dev.mqzn.lib.menus.items.MenuItem;
+
 import java.util.List;
 
 public class BigMenuPage<M extends MultiContentsMenu> extends MenuPage<M> {
@@ -20,7 +21,7 @@ public class BigMenuPage<M extends MultiContentsMenu> extends MenuPage<M> {
 
         int c = Math.min(max, total.size());
         for(int i = min; i < c; i++) {
-            this.getContents().put(this.nextEmptySlot(), total.get(i));
+            this.getCachedItems().put(this.nextEmptySlot(), total.get(i));
         }
 
     }

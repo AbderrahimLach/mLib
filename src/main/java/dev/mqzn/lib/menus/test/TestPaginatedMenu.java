@@ -9,8 +9,13 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class TestPaginatedMenu extends MultiContentsMenu {
+
+    public TestPaginatedMenu(UUID id) {
+        super(id);
+    }
 
     @Override
     public List<MenuItem> getTotalItems() {
@@ -41,4 +46,6 @@ public class TestPaginatedMenu extends MultiContentsMenu {
     public String getTitle() {
         return "TestPaginatedMenu";
     }
+
+
 }

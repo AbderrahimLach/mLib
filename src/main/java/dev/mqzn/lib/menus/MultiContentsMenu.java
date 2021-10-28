@@ -4,6 +4,7 @@ import dev.mqzn.lib.menus.items.MenuItem;
 
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class MultiContentsMenu extends PaginatedMenu {
@@ -11,9 +12,10 @@ public abstract class MultiContentsMenu extends PaginatedMenu {
     private final Map<Integer, BigMenuPage<? extends MultiContentsMenu>> cachedPages;
     private final List<MenuItem> cachedItems;
 
-    public MultiContentsMenu() {
+    public MultiContentsMenu(UUID id) {
+        super(id);
         cachedItems = this.getTotalItems();
-        cachedPages = this.setPages();
+        cachedPages = this.setPages(id);
     }
 
     public List<MenuItem> getCachedItems() {
@@ -38,7 +40,8 @@ public abstract class MultiContentsMenu extends PaginatedMenu {
     /*
         It may be a little heavy but it's the best option here
      */
-    public Map<Integer, BigMenuPage<? extends MultiContentsMenu>> setPages() {
+    @Override
+    public Map<Integer, BigMenuPage<? extends MultiContentsMenu>> setPages(UUID id) {
 
         Map<Integer, BigMenuPage<? extends MultiContentsMenu>> pages = new ConcurrentHashMap<>();
 

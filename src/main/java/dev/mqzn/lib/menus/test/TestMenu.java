@@ -2,16 +2,18 @@ package dev.mqzn.lib.menus.test;
 
 import dev.mqzn.lib.menus.Menu;
 import dev.mqzn.lib.menus.items.MenuItem;
-import dev.mqzn.lib.utils.ItemBuilder;
-import dev.mqzn.lib.utils.Translator;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class TestMenu extends Menu {
 
+
+    public TestMenu(UUID viewerId) {
+        super(viewerId);
+    }
 
     @Override
     public String getUniqueName() {
@@ -29,19 +31,9 @@ public class TestMenu extends Menu {
     }
 
     @Override
-    public Map<Integer, MenuItem> getContents() {
+    public Map<Integer, MenuItem> getContents(Player player) {
 
-        Map<Integer, MenuItem> items = new HashMap<>();
-        ItemStack it = new ItemBuilder(Material.BEACON, 1)
-                .setDisplay("&9HELLO").build();
-
-
-        items.put(13, new MenuItem(it, 13, (p, item) -> {
-            p.closeInventory();
-            p.sendMessage(Translator.color("&9HELLO &7" + p.getName()));
-        }));
-
-        return items;
+        return new HashMap<>();
     }
 
 }

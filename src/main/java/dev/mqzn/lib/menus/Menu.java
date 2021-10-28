@@ -16,16 +16,19 @@ import java.util.UUID;
 
 public abstract class Menu implements IMenu {
 
-    private  Map<Integer, MenuItem> contents;
+    private final UUID viewerId;
+    private final Map<Integer, MenuItem> contents;
 
-    public Menu() {
-        contents = this.getContents();
+
+    public Menu(UUID viewerId) {
+        contents = this.getContents(Bukkit.getPlayer(viewerId));
+        this.viewerId = viewerId;
     }
 
-
-    public void setContents(Map<Integer, MenuItem> contents) {
-        this.contents = contents;
+    public UUID getViewerId() {
+        return viewerId;
     }
+
 
     public abstract int getRows();
 
@@ -44,7 +47,7 @@ public abstract class Menu implements IMenu {
                 menuManager.unregister(id);
                 player.closeInventory();
 
-                this.open(player);
+                this.open();
                 player.updateInventory();
             }
         }
@@ -70,22 +73,22 @@ public abstract class Menu implements IMenu {
 
     }
 
-    public abstract Map<Integer, MenuItem> getContents();
+    public abstract Map<Integer, MenuItem> getContents(Player viewer);
 
     public Inventory buildInv() {
 
         Inventory inv = Bukkit.createInventory(null,
                 getRows()*9, getTitle());
 
-        getContents().forEach((slot, mi)->
+        contents.forEach((slot, mi)->
                 inv.setItem(slot, mi.getItem()));
 
         return inv;
     }
 
-    public void open(Player viewer) {
-        mLib.getInstance().getMenuManager().register(viewer.getUniqueId(), this);
-        viewer.openInventory(buildInv());
+    public void open() {
+        mLib.getInstance().getMenuManager().register(viewerId, this);
+        Bukkit.getPlayer(viewerId).openInventory(buildInv());
     }
 
 
@@ -99,7 +102,7 @@ public abstract class Menu implements IMenu {
             return;
         }
 
-        MenuItem registeredItem = getContents().get(e.getSlot());
+        MenuItem registeredItem = contents.get(e.getSlot());
         if(registeredItem == null) {
             e.setCancelled(true);
             return;
@@ -116,9 +119,8 @@ public abstract class Menu implements IMenu {
     }
 
     public int nextEmptySlot() {
-        Map<Integer, MenuItem> cachedItems = getContents();
         for (int i = 0, c = this.getSize(); i < c; i++) {
-            if (cachedItems.get(i) == null) return i;
+            if (contents.get(i) == null) return i;
         }
 
         return -1; // full

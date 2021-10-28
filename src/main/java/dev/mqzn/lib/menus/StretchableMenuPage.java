@@ -6,7 +6,7 @@ public class StretchableMenuPage<M extends PaginatedMenu> extends MenuPage<M> {
 
     private final int rows;
     public StretchableMenuPage(int index, M menu) {
-        super(index, menu);
+        super( index, menu);
         rows = this.buildRows();
     }
 

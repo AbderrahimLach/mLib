@@ -6,6 +6,7 @@ import dev.mqzn.lib.menus.items.MenuItem;
 import dev.mqzn.lib.utils.ItemBuilder;
 import dev.mqzn.lib.utils.Translator;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,8 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
 
     M menu;
 
-    public MenuPage(int index, M menu) {
+    public MenuPage( int index, M menu) {
+        super(menu.getViewer());
         this.index = index;
         this.menu = menu;
         this.title = menu.getTitle() + "#"  + index;
@@ -29,6 +31,7 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
 
 
     public MenuPage(int index, M menu, int rows) {
+        super(menu.getViewer());
         this.index = index;
         this.title = menu.getTitle() + " Page #" + index;
         this.rows = rows;
@@ -49,7 +52,7 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
                 .setDisplay(display).build(), this.getSize()-1, ((player, itemStack) -> {
 
             try {
-                menu.openPage(player, this.getIndex() + 1);
+                menu.openPage(this.getIndex() + 1);
             } catch (MenuPageOutOfBounds ex) {
                 ex.printStackTrace();
                 player.closeInventory();
@@ -63,7 +66,7 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
                 .setDisplay(display).build(), this.getSize()-9, ((player, itemStack) -> {
 
             try {
-                menu.openPage(player, this.getIndex() - 1);
+                menu.openPage(this.getIndex() - 1);
             } catch (MenuPageOutOfBounds ex) {
                 ex.printStackTrace();
                 player.closeInventory();
@@ -101,11 +104,11 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
         return rows;
     }
 
+
     @Override
-    public Map<Integer, MenuItem> getContents() {
+    public Map<Integer, MenuItem> getContents(Player viewer) {
         return contents;
     }
-
 
     @Override
     public boolean equals(Object o) {

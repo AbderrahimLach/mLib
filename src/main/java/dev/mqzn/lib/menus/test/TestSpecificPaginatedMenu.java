@@ -11,11 +11,16 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class TestSpecificPaginatedMenu extends PaginatedMenu {
 
+    public TestSpecificPaginatedMenu(UUID viewer) {
+        super(viewer);
+    }
+
     @Override
-    public Map<Integer, ? extends MenuPage<? extends PaginatedMenu>> setPages() {
+    public Map<Integer, ? extends MenuPage<? extends PaginatedMenu>> setPages(UUID uuid) {
 
         Map<Integer, MenuPage<TestSpecificPaginatedMenu>> map = new HashMap<>();
 

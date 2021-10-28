@@ -5,17 +5,23 @@ import dev.mqzn.lib.menus.items.MenuItem;
 import dev.mqzn.lib.utils.ItemBuilder;
 import dev.mqzn.lib.utils.Translator;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class TestLinkedMenu extends LinkedMenu {
 
+    public TestLinkedMenu(UUID viewer) {
+        super(viewer);
+    }
+
     @Override
-    public Map<Integer, MenuLink> initializeLinkedSlots() {
+    public Map<Integer, MenuLink> initializeLinkedSlots(Player player) {
 
         Map<Integer, MenuLink> map = new HashMap<>();
-        map.put(4, MenuLink.of(4, new TestMenu()));
+        map.put(4, MenuLink.of(4, new TestMenu(player.getUniqueId())));
 
         return map;
     }
@@ -36,7 +42,7 @@ public class TestLinkedMenu extends LinkedMenu {
     }
 
     @Override
-    public Map<Integer, MenuItem> getContents() {
+    public Map<Integer, MenuItem> getContents(Player player) {
 
         Map<Integer, MenuItem> map = new HashMap<>();
 
