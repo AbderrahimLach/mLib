@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public class TestPaginatedMenu extends MultiContentsMenu {
+public class TestMultiPaginatedMenu extends MultiContentsMenu {
 
-    public TestPaginatedMenu(UUID id) {
+    public TestMultiPaginatedMenu(UUID id) {
         super(id);
     }
 

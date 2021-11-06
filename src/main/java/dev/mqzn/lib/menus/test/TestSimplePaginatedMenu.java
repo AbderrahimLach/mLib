@@ -1,7 +1,6 @@
 package dev.mqzn.lib.menus.test;
 
 import dev.mqzn.lib.menus.MenuPage;
-import dev.mqzn.lib.menus.PageBuilder;
 import dev.mqzn.lib.menus.PaginatedMenu;
 import dev.mqzn.lib.menus.items.MenuItem;
 import dev.mqzn.lib.utils.ItemBuilder;
@@ -13,16 +12,16 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class TestSpecificPaginatedMenu extends PaginatedMenu {
+public class TestSimplePaginatedMenu extends PaginatedMenu {
 
-    public TestSpecificPaginatedMenu(UUID viewer) {
+    public TestSimplePaginatedMenu(UUID viewer) {
         super(viewer);
     }
 
     @Override
     public Map<Integer, ? extends MenuPage<? extends PaginatedMenu>> setPages(UUID uuid) {
 
-        Map<Integer, MenuPage<TestSpecificPaginatedMenu>> map = new HashMap<>();
+        Map<Integer, MenuPage<TestSimplePaginatedMenu>> map = new HashMap<>();
 
         ItemStack it = new ItemBuilder(Material.BEACON, 1)
                 .setDisplay("&9HELLO").build();
@@ -30,7 +29,20 @@ public class TestSpecificPaginatedMenu extends PaginatedMenu {
         ItemStack it2 = new ItemBuilder(Material.DIAMOND, 1)
                 .setDisplay("&aWelcome").build();
 
-        new PageBuilder<>(1, this).setRows(3)
+        MenuPage<TestSimplePaginatedMenu> page = new MenuPage<>(1, this, 3);
+        page.setItem(new MenuItem(it, 13, (player, item) -> {
+            player.closeInventory();
+            player.sendMessage(Translator.color("&9HELLO &7" + player.getName()));
+        }));
+
+        page.setItem(new MenuItem(it2, 15, (p, item) -> {
+            p.closeInventory();
+            p.sendMessage(Translator.color("&aWelcome &7" + p.getName()));
+
+        }));
+
+
+        /*new PageBuilder<>(1, this).setRows(3)
 
                 .setItems(
                         new MenuItem(it, 13, (p, item) -> {
@@ -41,7 +53,7 @@ public class TestSpecificPaginatedMenu extends PaginatedMenu {
                     p.closeInventory();
                     p.sendMessage(Translator.color("&aWelcome &7" + p.getName()));
 
-                })).buildPage(map);
+                })).buildPage(map);*/
 
 
         return map;
@@ -49,12 +61,12 @@ public class TestSpecificPaginatedMenu extends PaginatedMenu {
 
     @Override
     public String getUniqueName() {
-        return "testspecific";
+        return "Test-Simple-Paginated";
     }
 
     @Override
     public String getTitle() {
-        return "SpecificTest";
+        return Translator.color("&9Simple-Paginated");
     }
 
 

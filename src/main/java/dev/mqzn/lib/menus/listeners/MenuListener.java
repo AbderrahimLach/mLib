@@ -43,6 +43,7 @@ public class MenuListener implements Listener {
 
         Menu m = mLib.getInstance().getMenuManager().getOpenMenu(player.getUniqueId());
         if(m != null) m.parseOnClick(e);
+
     }
 
 
