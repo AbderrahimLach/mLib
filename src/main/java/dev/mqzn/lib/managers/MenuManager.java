@@ -1,6 +1,7 @@
 package dev.mqzn.lib.managers;
 
 import dev.mqzn.lib.menus.Menu;
+import org.bukkit.entity.Player;
 
 import java.util.Map;
 import java.util.UUID;
@@ -32,5 +33,8 @@ public class MenuManager {
         openMenus.remove(viewer);
     }
 
-
+    public void close(Player viewer) {
+        unregister(viewer.getUniqueId());
+        viewer.closeInventory();
+    }
 }

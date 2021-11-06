@@ -87,8 +87,12 @@ public abstract class Menu implements IMenu {
     }
 
     public void open() {
+        Player p = Bukkit.getPlayer(viewerId);
+        mLib.getInstance().getMenuManager().unregister(viewerId);
+        p.closeInventory();
+
         mLib.getInstance().getMenuManager().register(viewerId, this);
-        Bukkit.getPlayer(viewerId).openInventory(buildInv());
+        p.openInventory(buildInv());
     }
 
 
