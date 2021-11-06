@@ -9,6 +9,6 @@ This library includes the following utilities:
 
 
 ***Some Guides on how to use each utility***
-- [Menus](Menus)
-- [Commands](Commands)
+- [Menus](wiki/Menus)
+- [Commands](wiki/Commands)
 
