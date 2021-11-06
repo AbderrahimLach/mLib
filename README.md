@@ -8,6 +8,9 @@ This library includes the following utilities:
   4) Other crucial utilities (e.g: ItemBuilder, MessagesBuilder)
 
 
+## Using mLib
+You can download the jar directly from [here](../../releases/tag/1.0.3)
+
 ***Some Guides on how to use each utility***
 - [Menus](../../wiki/Menus)
 - [Commands](../../wiki/Commands)
