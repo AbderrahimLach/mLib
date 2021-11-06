@@ -9,6 +9,6 @@ This library includes the following utilities:
 
 
 ***Some Guides on how to use each utility***
-- [Menus](github.com/Mqzn/mLib/wiki/Menus)
-- [Commands](github.com/Mqzn/mLib/wiki/Commands)
+- [Menus](Menus)
+- [Commands](Commands)
 
