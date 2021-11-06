@@ -13,11 +13,11 @@ There are currently two ways of using it
 - Artifact Dependency
 - Maven Dependency
 
-# Artifact Dependency
+### Artifact Dependency
 You can download the jar directly from [here](../../releases/tag/1.0.3) , and use
 it as an artifact
 
-# Maven Dependency
+### Maven Dependency
 Firstly, you must inject jitpack dependency in your pom.xml by adding 
 the jitpack repository in your repositories **AND** the dependency of jitpack it's self
 Moreover, you must add the mLib dependency from github
