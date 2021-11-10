@@ -26,7 +26,8 @@ public abstract class SubCommand extends Requirement {
         this.name = name;
         this.position = position;
 
-        requirements = new LinkedHashSet<>(setRequirements());
+        requirements = new LinkedHashSet<>();
+        this.setRequirements();
         children = requirements.stream()
                 .filter(req -> req instanceof SubCommand).map(req -> (SubCommand)req)
                 .collect(Collectors.toSet());
@@ -65,7 +66,11 @@ public abstract class SubCommand extends Requirement {
 
     public abstract String getDescription();
 
-    public abstract Set<Requirement> setRequirements();
+    public abstract void setRequirements();
+
+    protected void addRequirement(Criteria criteria, Executor executor) {
+        requirements.add(Requirement.of(criteria, executor));
+    }
 
     @Override
     public boolean equals(Object o) {
