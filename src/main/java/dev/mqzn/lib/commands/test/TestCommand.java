@@ -1,9 +1,7 @@
 package dev.mqzn.lib.commands.test;
 
 import dev.mqzn.lib.commands.api.MCommand;
-import dev.mqzn.lib.commands.api.Requirement;
-
-import java.util.Set;
+import dev.mqzn.lib.utils.Translator;
 
 public class TestCommand extends MCommand {
 
@@ -13,8 +11,8 @@ public class TestCommand extends MCommand {
     }
 
     @Override
-    public Set<Requirement> setRequirements() {
-        return null;
+    public void setRequirements() {
+        this.addRequirement((commandArgs -> commandArgs.size() == 0), ((sender, args) -> sender.sendMessage(Translator.color("&5WORKED"))));
     }
 
 

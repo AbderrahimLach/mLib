@@ -27,14 +27,16 @@ public abstract class MCommand extends Command {
         super(name, Translator.color(desc), usage, Arrays.asList(aliases));
         this.permission = permission;
         this.allowConsole = allowConsole;
-        requirements = setRequirements();
+        requirements = new HashSet<>();
+        this.setRequirements();
     }
 
     public MCommand(String name, String desc, String usage, boolean allowConsole, String... aliases) {
         super(name, desc, usage, Arrays.asList(aliases));
         this.permission = null;
         this.allowConsole = allowConsole;
-        requirements = setRequirements();
+        requirements = new HashSet<>();
+        this.setRequirements();
     }
 
 
@@ -45,7 +47,7 @@ public abstract class MCommand extends Command {
     }
 
 
-    public abstract Set<Requirement> setRequirements();
+    public abstract void setRequirements();
 
     public boolean execute(CommandSender sender, String label, String[] args) {
 
@@ -192,6 +194,8 @@ public abstract class MCommand extends Command {
     }
 
 
-
+    public void addRequirement(Requirement.Criteria criteria, Requirement.Executor executor) {
+        requirements.add(Requirement.of(criteria, executor));
+    }
 
 }
