@@ -5,84 +5,82 @@ import dev.mqzn.lib.utils.Translator;
 import org.bukkit.command.CommandSender;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Requirement {
 
-    private BiConsumer<CommandSender, CommandArg[]> actions;
-    private final Predicate<CommandArg[]> argsCondition;
-    private final Map<Integer, Argument> argParses;
-    private final MCommand command;
+    private final Executor actions;
+    private final Criteria criteria;
+    private final Map<Integer, UsageArg> argParses;
 
-    public Requirement(MCommand command, Predicate<CommandArg[]> argsCondition, BiConsumer<CommandSender, CommandArg[]> actions) {
-        this.command = command;
-        this.argsCondition = argsCondition;
+    protected Requirement(Criteria criteria, Executor actions) {
+        this.criteria = criteria;
         this.actions = actions;
         argParses = new HashMap<>();
     }
 
-    public Requirement(MCommand command, Predicate<CommandArg[]> argsCondition) {
-        this.command = command;
-        this.argsCondition = argsCondition;
-        argParses = new HashMap<>();
+    public static Requirement of(Criteria criteria, Executor executor) {
+        return new Requirement(criteria, executor);
     }
 
-    public void setActions(BiConsumer<CommandSender, CommandArg[]> actions) {
-        this.actions = actions;
+    public Criteria getCriteria() {
+        return criteria;
     }
 
-    public boolean hasActions() {
-        return actions != null;
-    }
 
-    public Predicate<CommandArg[]> getArgsCondition() {
-        return argsCondition;
-    }
-
-    public MCommand getCommand() {
-        return command;
-    }
-
-    public BiConsumer<CommandSender, CommandArg[]> getActions() {
+    public Executor getExecutor() {
         return actions;
     }
 
-    public void setArg(String argName, int argPosition, Class<?> argClassType, Argument.ArgumentType type) {
-        argParses.put(argPosition, new Argument(argName, argPosition, argClassType, type));
+    public void setArg(String argName, int argPosition, Class<?> argClassType, UsageArg.ArgumentType type) {
+        argParses.put(argPosition, new UsageArg(argName, argPosition, argClassType, type));
     }
 
-    public String getUsage() {
-        String rest = argParses.values().stream().map(Argument::toString).collect(Collectors.joining());
+    public String getUsage(MCommand command) {
+        String rest = argParses.values().stream().map(UsageArg::toString).collect(Collectors.joining());
         return Translator.color("&c/" + command.getLabel() + " " + rest);
     }
 
-    public Map<Integer, Argument> getArgParses() {
+    public Map<Integer, UsageArg> getArgParses() {
         return argParses;
     }
 
-    public void execute(CommandSender sender, CommandArg[] args) {
-        if(argsCondition.test(args)) {
-            this.getActions().accept(sender, args);
+    public void execute(CommandSender sender, List<CommandArg> args) {
+        if(criteria.test(args)) {
+            this.getExecutor().execute(sender, args);
         }
     }
+
+    @FunctionalInterface
+    public interface Executor {
+
+        <S extends CommandSender, Args extends List<CommandArg>> void execute(S sender, Args args);
+
+    }
+
+    @FunctionalInterface
+    public interface Criteria extends Predicate<List<CommandArg>> {
+
+
+    }
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof dev.mqzn.lib.commands.api.Requirement)) return false;
         dev.mqzn.lib.commands.api.Requirement that = (dev.mqzn.lib.commands.api.Requirement) o;
-        return  command.equals(that.getCommand()) &&
-                getArgsCondition() == that.getArgsCondition() &&
-                Objects.equal(getActions(), that.getActions()) &&
+        return getCriteria() == that.getCriteria() &&
+                Objects.equal(getExecutor(), that.getExecutor()) &&
                 Objects.equal(argParses, that.argParses);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getActions(), getArgsCondition(), argParses);
+        return Objects.hashCode(getExecutor(), getCriteria(), argParses);
     }
 
 

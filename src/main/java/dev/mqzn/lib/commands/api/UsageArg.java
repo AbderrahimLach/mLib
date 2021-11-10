@@ -2,14 +2,14 @@ package dev.mqzn.lib.commands.api;
 
 import com.google.common.base.Objects;
 
-public class Argument {
+public class UsageArg {
 
     private final String name;
     private final int position;
     private final Class<?> typeClass;
     private final ArgumentType argumentType;
 
-    public Argument(String name, int position, Class<?> typeClass, ArgumentType argumentType) {
+    public UsageArg(String name, int position, Class<?> typeClass, ArgumentType argumentType) {
         this.name = name;
         this.position = position;
         this.typeClass = typeClass;
@@ -39,11 +39,11 @@ public class Argument {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Argument)) return false;
-        Argument argument = (Argument) o;
-        return getPosition() == argument.getPosition() &&
-                Objects.equal(getName(), argument.getName()) &&
-                Objects.equal(getTypeClass(), argument.getTypeClass());
+        if (!(o instanceof UsageArg)) return false;
+        UsageArg usageArg = (UsageArg) o;
+        return getPosition() == usageArg.getPosition() &&
+                Objects.equal(getName(), usageArg.getName()) &&
+                Objects.equal(getTypeClass(), usageArg.getTypeClass());
     }
 
     @Override

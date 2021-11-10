@@ -14,9 +14,6 @@ public class IPParser implements ArgumentParser<IP> {
 
         String range = "(\\d{1,2}|([01])\\" + "d{2}|2[0-4]\\d|25[0-5])";
 
-        // Regex for a digit from 0 to 255 and
-        // followed by a dot, repeat 4 times.
-        // this is the regex to validate an IP address.
         String regex = range + "\\." + range + "\\." + range + "\\." + range;
 
         Pattern p = Pattern.compile(regex);

@@ -7,10 +7,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class MCommand extends Command {
 
@@ -22,17 +20,20 @@ public abstract class MCommand extends Command {
     }
 
     private final String permission;
-    private final Requirement[] requirements;
+    private final boolean allowConsole;
+    private final Set<Requirement> requirements;
 
-    public MCommand(String name, String permission, String desc, String usage, String... aliases) {
-        super(name, desc, usage, Arrays.asList(aliases));
+    public MCommand(String name, String permission, String desc, String usage, boolean allowConsole, String... aliases) {
+        super(name, Translator.color(desc), usage, Arrays.asList(aliases));
         this.permission = permission;
+        this.allowConsole = allowConsole;
         requirements = setRequirements();
     }
 
-    public MCommand(String name, String desc, String usage, String... aliases) {
+    public MCommand(String name, String desc, String usage, boolean allowConsole, String... aliases) {
         super(name, desc, usage, Arrays.asList(aliases));
         this.permission = null;
+        this.allowConsole = allowConsole;
         requirements = setRequirements();
     }
 
@@ -44,11 +45,11 @@ public abstract class MCommand extends Command {
     }
 
 
-    public abstract Requirement[] setRequirements();
+    public abstract Set<Requirement> setRequirements();
 
     public boolean execute(CommandSender sender, String label, String[] args) {
 
-        if(!allowConsole() && !(sender instanceof Player)) {
+        if(!allowConsole && !(sender instanceof Player)) {
             sender.sendMessage(ONLY_PLAYER);
             return true;
         }
@@ -58,27 +59,19 @@ public abstract class MCommand extends Command {
             return true;
         }
 
-
-        CommandArg[] commandArgs = new CommandArg[args.length];
-
-        for (int i = 0; i < args.length; i++) {
-
-            String arg = args[i];
-            Class<?> clazz = CommandManager.getClazzType(arg);
-
-            commandArgs[i] = new CommandArg(i,
-                    mLib.getInstance().getCommandManager()
-                            .getArgumentParser(clazz).parse(arg), arg);
-
-        }
-
-
-        execute(sender, commandArgs);
+        execute(sender, Arrays.stream(args).map(arg -> new CommandArg(indexOf(arg, args),
+                            mLib.getInstance().getCommandManager()
+                        .getArgumentParser(CommandManager.getClazzType(arg))
+                        .parse(arg), arg)).collect(Collectors.toList()));
 
         return true;
     }
 
-    public void execute(CommandSender sender, CommandArg... args) {
+    private int indexOf(String arg, String[] args) {
+        return Arrays.asList(args).indexOf(arg);
+    }
+
+    public void execute(CommandSender sender, List<CommandArg> args) {
 
         Optional<Requirement> found = getRequirementUsed(requirements, args);
 
@@ -86,15 +79,15 @@ public abstract class MCommand extends Command {
 
             sender.sendMessage("&9/" + this.getName() + " &eUsages: ");
             for(Requirement reqs : requirements) {
-                if(reqs.getArgsCondition().test(args)) {
-                    sender.sendMessage(Translator.color("&7&l- " + reqs.getUsage()));
+                if(reqs.getCriteria().test(args)) {
+                    sender.sendMessage(Translator.color("&7&l- " + reqs.getUsage(this)));
                 }
             }
             return;
         }
         Requirement req = found.get();
 
-        if(req.getActions() != null && !(req instanceof SubCommand)) {
+        if(req.getExecutor() != null && !(req instanceof SubCommand)) {
             req.execute(sender, args);
             return;
         }
@@ -109,9 +102,9 @@ public abstract class MCommand extends Command {
 
     }
 
-    private void executeChildren(SubCommand subCommand, CommandSender sender, CommandArg... args) {
+    private void executeChildren(SubCommand subCommand, CommandSender sender, List<CommandArg> args) {
 
-        Optional<Requirement> subReqSafe = this.getRequirementUsed(this.reqsToArray(subCommand.getRequirements()), args);
+        Optional<Requirement> subReqSafe = this.getRequirementUsed(subCommand.getRequirements(), args);
 
         if(subReqSafe.isPresent()) {
             subReqSafe.get().execute(sender, args);
@@ -120,30 +113,30 @@ public abstract class MCommand extends Command {
 
         //base case
         if(!subCommand.isParent()) {
-            subCommand.sendUsage(sender, args);
+            subCommand.sendUsage(this, sender, args);
             return;
         }
 
         Optional<SubCommand> subChildUsed = getChildUsed(subCommand, args);
         if(!subChildUsed.isPresent()) {
-            subCommand.sendUsage(sender, args);
+            subCommand.sendUsage(this, sender, args);
             return;
         }
 
         executeChildren(subChildUsed.get(), sender, args);
     }
 
-    private Optional<SubCommand> getChildUsed(SubCommand parent, CommandArg... args) {
+    private Optional<SubCommand> getChildUsed(SubCommand parent, List<CommandArg> args) {
 
         Set<? extends SubCommand> children = parent.getChildren();
-        assert parent.getPosition() < args.length;
+        assert parent.getPosition() < args.size();
 
         SubCommand childSafe = null;
 
-        for (int start = parent.getPosition(); start < args.length; start++) {
+        for (int start = parent.getPosition(); start < args.size(); start++) {
             for(SubCommand child : children) {
                 if (child.getPosition() == start
-                        && child.getName().equalsIgnoreCase(args[start].getArgument())) {
+                        && child.getName().equalsIgnoreCase(args.get(start).getArgument())) {
                     childSafe = child;
                     break;
                 }
@@ -156,20 +149,20 @@ public abstract class MCommand extends Command {
 
 
 
-    private Optional<Requirement> getRequirementUsed(Requirement[] storedReqs, CommandArg[] args) {
+    private Optional<Requirement> getRequirementUsed(Set<Requirement> storedReqs, List<CommandArg> args) {
 
         Requirement rq = null;
         requirements :
         for (Requirement requirement : storedReqs) {
 
-            if (!requirement.getArgsCondition().test(args)) continue;
+            if (!requirement.getCriteria().test(args)) continue;
 
             if(requirement instanceof SubCommand) {
 
                 SubCommand subCommand = (SubCommand)requirement;
-                for (int i = 0; i < args.length; i++) {
+                for (int i = 0; i < args.size(); i++) {
                     if(subCommand.getPosition() == i
-                            && args[i].getArgument().equalsIgnoreCase(subCommand.getName())) {
+                            && args.get(i).getArgument().equalsIgnoreCase(subCommand.getName())) {
                         rq = subCommand;
                         break requirements;
                     }
@@ -177,10 +170,10 @@ public abstract class MCommand extends Command {
 
             }
 
-            for (Map.Entry<Integer, Argument> argEntry : requirement.getArgParses().entrySet()) {
+            for (Map.Entry<Integer, UsageArg> argEntry : requirement.getArgParses().entrySet()) {
 
-                CommandArg arg = args[argEntry.getKey()];
-                Argument wanted = argEntry.getValue();
+                CommandArg arg = args.get(argEntry.getKey());
+                UsageArg wanted = argEntry.getValue();
                 ArgumentParser<?> parser = mLib.getInstance().getCommandManager()
                         .getArgumentParser(wanted.getTypeClass());
 
@@ -198,18 +191,7 @@ public abstract class MCommand extends Command {
         return Optional.ofNullable(rq);
     }
 
-    public abstract boolean allowConsole();
 
-    private Requirement[] reqsToArray(Set<Requirement> reqsSet) {
-
-        int i = 0;
-        Requirement[] arr = new Requirement[reqsSet.size()];
-        for(Requirement req : reqsSet) {
-            arr[i] = req;
-            i++;
-        }
-        return arr;
-    }
 
 
 }

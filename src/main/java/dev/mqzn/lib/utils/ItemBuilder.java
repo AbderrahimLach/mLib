@@ -11,7 +11,7 @@ import java.util.List;
 
 public class ItemBuilder {
 
-    private final ItemStack itemStack;
+    protected final ItemStack itemStack;
 
     public ItemBuilder(Material material) {
         itemStack = new ItemStack(material);

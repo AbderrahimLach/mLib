@@ -6,26 +6,31 @@ import org.bukkit.command.CommandSender;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public abstract class SubCommand extends Requirement {
 
+    private final String name;
+    private final int position;
+
     private final Set<Requirement> requirements;
     private final Set<SubCommand> children;
 
-    public SubCommand(MCommand command, Predicate<CommandArg[]> argLength) {
-        super(command, argLength);
+    public SubCommand(String name, int position, Executor executor) {
+        super( (args) -> !args.isEmpty()
+                && args.get(position).getArgument()
+                        .equalsIgnoreCase(name)
+                , executor);
+
+        this.name = name;
+        this.position = position;
+
         requirements = new LinkedHashSet<>(Arrays.asList(setRequirements()));
         children = requirements.stream()
                 .filter(req -> req instanceof SubCommand).map(req -> (SubCommand)req)
                 .collect(Collectors.toSet());
-    }
-
-    @Override
-    public MCommand getCommand() {
-        return super.getCommand();
     }
 
     public Set<Requirement> getRequirements() {
@@ -40,22 +45,26 @@ public abstract class SubCommand extends Requirement {
         return !children.isEmpty();
     }
 
-    public void sendUsage(CommandSender sender, CommandArg[] args) {
+    public void sendUsage(MCommand command, CommandSender sender, List<CommandArg> args) {
         sender.sendMessage(Translator.color("&9/" + this.getName() + " &eUsages: "));
         for(Requirement reqs : this.getRequirements()) {
-            if(reqs.getArgsCondition().test(args)) {
-                sender.sendMessage(Translator.color("&7&l- " + reqs.getUsage()));
+            if(reqs.getCriteria().test(args)) {
+                sender.sendMessage(Translator.color("&7&l- " + reqs.getUsage(command)));
             }
         }
     }
 
-    public abstract String getName();
+    public String getName() {
+        return name;
+    }
+
+    public int getPosition() {
+        return position;
+    }
 
     public abstract String getPermission();
 
     public abstract String getDescription();
-
-    public abstract int getPosition();
 
     public abstract Requirement[] setRequirements();
 
