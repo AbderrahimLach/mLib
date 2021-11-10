@@ -8,9 +8,10 @@ import java.util.List;
 public class BigMenuPage<M extends MultiContentsMenu> extends MenuPage<M> {
 
     public BigMenuPage(Plugin plugin, int index, M menu) {
-        super(plugin, index, menu, 6);
+        super(plugin, index, menu, menu.getPageRows());
         this.calcItems(menu);
     }
+
 
     public void calcItems(M menu) {
 

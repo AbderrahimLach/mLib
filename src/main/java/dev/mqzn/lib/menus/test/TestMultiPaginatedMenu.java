@@ -29,7 +29,12 @@ public class TestMultiPaginatedMenu extends MultiContentsMenu {
 
     @Override
     public int getPageCapacity() {
-        return 52;
+        return 12;
+    }
+
+    @Override
+    public int getPageRows() {
+        return 3;
     }
 
 

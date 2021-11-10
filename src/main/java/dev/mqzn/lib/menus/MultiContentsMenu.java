@@ -30,6 +30,8 @@ public abstract class MultiContentsMenu extends PaginatedMenu {
     public abstract int getPageCapacity();
 
 
+    public abstract int getPageRows();
+
     /*
         It may be a little heavy but it's the best option here
      */
