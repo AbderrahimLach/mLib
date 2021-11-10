@@ -7,7 +7,7 @@ import java.util.Set;
 
 public class TestCommand extends MCommand {
 
-    public TestCommand(String... aliases) {
+    public TestCommand() {
         super("test", "test.perms", "test shit", "/test",
                 true, "tez");
     }
