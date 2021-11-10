@@ -7,7 +7,7 @@ public class TestCommand extends MCommand {
 
     public TestCommand() {
         super("test", "test.perms", "test shit", "/test",
-                true, "tez");
+                true);
     }
 
     @Override
