@@ -1,15 +1,14 @@
 package dev.mqzn.lib.menus;
 
 import dev.mqzn.lib.menus.items.MenuItem;
-
-import java.util.Map;
+import org.bukkit.plugin.Plugin;
 
 public class PageBuilder<M extends PaginatedMenu> {
 
     private final MenuPage<M> menuPage;
 
-    public PageBuilder(int index, M menu) {
-        menuPage = new MenuPage<>(index, menu);
+    public PageBuilder(Plugin plugin, int index, M menu) {
+        menuPage = new MenuPage<>(plugin, index, menu);
     }
 
     public PageBuilder<M> setRows(int rows) {
@@ -24,8 +23,8 @@ public class PageBuilder<M extends PaginatedMenu> {
         return this;
     }
 
-    public void buildPage(Map<Integer, MenuPage<M>> pages) {
-        pages.put(menuPage.getIndex(), menuPage);
+    public void buildPage(M menu) {
+        menu.addDistinctPage(menuPage);
     }
 
 

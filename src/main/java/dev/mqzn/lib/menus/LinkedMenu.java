@@ -8,26 +8,25 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class LinkedMenu extends Menu {
 
     private final Map<Integer, MenuLink> linkedSlots;
 
-    public LinkedMenu(UUID viewer) {
-        super(viewer);
-        linkedSlots = this.initializeLinkedSlots(Bukkit.getPlayer(viewer));
-    }
-
-    public LinkedMenu(UUID viewer, Map<Integer, MenuLink> linkedSlots) {
-        super(viewer);
-        this.linkedSlots = linkedSlots;
+    public LinkedMenu(Plugin plugin, UUID viewer) {
+        super(plugin, viewer);
+        linkedSlots = new ConcurrentHashMap<>();
+        this.setLinkedSlots(Bukkit.getPlayer(viewer));
     }
 
 
-    public abstract Map<Integer, MenuLink> initializeLinkedSlots(Player player);
+
+    public abstract void setLinkedSlots(Player player);
 
 
     public void addMenuLink(int slot, IMenu IMenu) {
@@ -80,7 +79,7 @@ public abstract class LinkedMenu extends Menu {
 
         int slotClicked = e.getSlot();
 
-        MenuItem registeredItem = this.getCachedItems().get(slotClicked);
+        MenuItem registeredItem = this.getItemAt(slotClicked);
         if(registeredItem == null) {
             e.setCancelled(true);
             return;

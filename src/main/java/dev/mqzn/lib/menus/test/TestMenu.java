@@ -5,16 +5,15 @@ import dev.mqzn.lib.menus.items.MenuItem;
 import dev.mqzn.lib.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class TestMenu extends Menu {
 
 
-    public TestMenu(UUID viewerId) {
-        super(viewerId);
+    public TestMenu(Plugin plugin, UUID viewerId) {
+        super(plugin, viewerId);
     }
 
     @Override
@@ -35,12 +34,10 @@ public class TestMenu extends Menu {
     }
 
     @Override
-    public Map<Integer, MenuItem> getContents(Player player) {
-        Map<Integer, MenuItem> items = new HashMap<>();
-        items.put(0, new MenuItem(new ItemBuilder(Material.BEDROCK).setDisplay("&amLib Test Item").build(),
+    public void setContents(Player player) {
+        this.setItem(new MenuItem(new ItemBuilder(Material.BEDROCK).setDisplay("&amLib Test Item").build(),
                 (clicker, item) -> clicker.sendMessage("Hello")));
 
-        return items;
     }
 
 }

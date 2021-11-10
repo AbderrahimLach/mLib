@@ -5,28 +5,39 @@ import dev.mqzn.lib.mLib;
 import dev.mqzn.lib.menus.exceptions.MenuPageOutOfBounds;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class PaginatedMenu implements IMenu {
 
-    private final Map<Integer, ? extends MenuPage<? extends PaginatedMenu>> pages; //caching calculated pages from the abstract method
+    private final Map<Integer, MenuPage<? extends PaginatedMenu>> pages; //caching calculated pages from the abstract method
     private int currentPage; //current page opened for whoever viewer
 
     private final UUID viewer;
+    protected Plugin plugin;
 
-    public PaginatedMenu(UUID viewer) { //simple constructor
-        pages = setPages(viewer);
+    public PaginatedMenu(Plugin plugin, UUID viewer) { //simple constructor
+        pages = new ConcurrentHashMap<>();
         this.viewer = viewer;
+        this.plugin = plugin;
+
+        this.setPages(viewer);
     }
 
     public UUID getViewer() {
         return viewer;
     }
 
-    public Map<Integer, ? extends MenuPage<? extends PaginatedMenu>> getPages() {
-        return pages;
+    public void addDistinctPage(MenuPage<? extends PaginatedMenu> menuPage) {
+        pages.put(menuPage.getIndex(), menuPage);
+    }
+
+    public Collection<MenuPage<? extends PaginatedMenu>> getPages() {
+        return pages.values();
     }
 
     /**
@@ -40,7 +51,7 @@ public abstract class PaginatedMenu implements IMenu {
      */
     public void openPage(int pageIndex) throws MenuPageOutOfBounds {
 
-        MenuPage<? extends PaginatedMenu> page = getPages().get(pageIndex);
+        MenuPage<? extends PaginatedMenu> page = pages.get(pageIndex);
         if(page == null) {
             throw new MenuPageOutOfBounds(calculateMaxPages(), pageIndex);
         }
@@ -56,9 +67,8 @@ public abstract class PaginatedMenu implements IMenu {
 
     /**
      * defines how each sub class menu can define it's own pages
-     * @return A map storing each page with it's index
      */
-    public abstract Map<Integer, ? extends MenuPage<? extends PaginatedMenu>> setPages(UUID viewer);
+    public abstract void setPages(UUID viewer);
 
 
     /**

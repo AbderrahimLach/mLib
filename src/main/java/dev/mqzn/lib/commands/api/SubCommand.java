@@ -4,7 +4,6 @@ import com.google.common.base.Objects;
 import dev.mqzn.lib.utils.Translator;
 import org.bukkit.command.CommandSender;
 
-import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,7 +26,7 @@ public abstract class SubCommand extends Requirement {
         this.name = name;
         this.position = position;
 
-        requirements = new LinkedHashSet<>(Arrays.asList(setRequirements()));
+        requirements = new LinkedHashSet<>(setRequirements());
         children = requirements.stream()
                 .filter(req -> req instanceof SubCommand).map(req -> (SubCommand)req)
                 .collect(Collectors.toSet());
@@ -66,7 +65,7 @@ public abstract class SubCommand extends Requirement {
 
     public abstract String getDescription();
 
-    public abstract Requirement[] setRequirements();
+    public abstract Set<Requirement> setRequirements();
 
     @Override
     public boolean equals(Object o) {

@@ -7,43 +7,37 @@ import dev.mqzn.lib.utils.ItemBuilder;
 import dev.mqzn.lib.utils.Translator;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.bukkit.plugin.Plugin;
 
 public class MenuPage<M extends PaginatedMenu> extends Menu {
 
     private final String title;
     private final int index;
     private int rows;
-    private final Map<Integer, MenuItem> contents;
 
-    M menu;
+    private final M menu;
 
-    public MenuPage( int index, M menu) {
-        super(menu.getViewer());
+    public MenuPage(Plugin plugin, int index, M menu) {
+        super(plugin, menu.getViewer());
         this.index = index;
         this.menu = menu;
         this.title = menu.getTitle() + "#"  + index;
-        contents = new HashMap<>();
         setPageItems(menu);
     }
 
 
-    public MenuPage(int index, M menu, int rows) {
-        super(menu.getViewer());
+    public MenuPage(Plugin plugin, int index, M menu, int rows) {
+        super(plugin, menu.getViewer());
         this.index = index;
+        this.menu = menu;
         this.title = menu.getTitle() + " Page #" + index;
         this.rows = rows;
-        this.contents = new HashMap<>();
         setPageItems(menu);
     }
 
     public void setRows(int rows) {
         this.rows = rows;
     }
-
-
 
     private void setPageItems(M menu) {
         String display = "&aNext Page >>";
@@ -52,6 +46,7 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
                 .setDisplay(display).build(), this.getSize()-1, ((player, itemStack) -> {
 
             try {
+                if(menu == null) return;
                 menu.openPage(this.getIndex() + 1);
             } catch (MenuPageOutOfBounds ex) {
                 ex.printStackTrace();
@@ -106,8 +101,8 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
 
 
     @Override
-    public Map<Integer, MenuItem> getContents(Player viewer) {
-        return contents;
+    public void setContents(Player viewer) {
+
     }
 
     @Override

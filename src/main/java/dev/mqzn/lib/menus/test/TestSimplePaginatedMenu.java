@@ -7,21 +7,19 @@ import dev.mqzn.lib.utils.ItemBuilder;
 import dev.mqzn.lib.utils.Translator;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 public class TestSimplePaginatedMenu extends PaginatedMenu {
 
-    public TestSimplePaginatedMenu(UUID viewer) {
-        super(viewer);
+    public TestSimplePaginatedMenu(Plugin plugin, UUID viewer) {
+        super(plugin, viewer);
     }
 
     @Override
-    public Map<Integer, ? extends MenuPage<? extends PaginatedMenu>> setPages(UUID uuid) {
+    public void setPages(UUID uuid) {
 
-        Map<Integer, MenuPage<TestSimplePaginatedMenu>> map = new HashMap<>();
 
         ItemStack it = new ItemBuilder(Material.BEACON, 1)
                 .setDisplay("&9HELLO").build();
@@ -29,7 +27,7 @@ public class TestSimplePaginatedMenu extends PaginatedMenu {
         ItemStack it2 = new ItemBuilder(Material.DIAMOND, 1)
                 .setDisplay("&aWelcome").build();
 
-        MenuPage<TestSimplePaginatedMenu> page = new MenuPage<>(1, this, 3);
+        MenuPage<TestSimplePaginatedMenu> page = new MenuPage<>(plugin,1, this, 3);
         page.setItem(new MenuItem(it, 13, (player, item) -> {
             player.closeInventory();
             player.sendMessage(Translator.color("&9HELLO &7" + player.getName()));
@@ -41,6 +39,7 @@ public class TestSimplePaginatedMenu extends PaginatedMenu {
 
         }));
 
+        this.addDistinctPage(page);
 
         /*new PageBuilder<>(1, this).setRows(3)
 
@@ -55,8 +54,6 @@ public class TestSimplePaginatedMenu extends PaginatedMenu {
 
                 })).buildPage(map);*/
 
-
-        return map;
     }
 
     @Override

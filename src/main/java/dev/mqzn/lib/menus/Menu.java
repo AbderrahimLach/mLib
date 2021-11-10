@@ -2,7 +2,6 @@ package dev.mqzn.lib.menus;
 
 import com.google.common.base.Objects;
 import dev.mqzn.lib.mLib;
-import dev.mqzn.lib.managers.MenuManager;
 import dev.mqzn.lib.menus.items.MenuItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -10,19 +9,25 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 
+import java.util.Collection;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Menu implements IMenu {
 
     private final UUID viewerId;
     private final Map<Integer, MenuItem> contents;
 
+    protected Plugin plugin;
 
-    public Menu(UUID viewerId) {
-        contents = this.getContents(Bukkit.getPlayer(viewerId));
+    public Menu(Plugin plugin, UUID viewerId) {
         this.viewerId = viewerId;
+        contents = new ConcurrentHashMap<>();
+        this.setContents(Bukkit.getPlayer(viewerId));
+        this.plugin = plugin;
     }
 
     public UUID getViewerId() {
@@ -34,33 +39,15 @@ public abstract class Menu implements IMenu {
 
     public void setItem(MenuItem item) {
         contents.put(item.getSlot(), item);
-
-        if(isOpenForAnyone()) {
-            MenuManager menuManager = mLib.getInstance().getMenuManager();
-
-            for(Player player : Bukkit.getOnlinePlayers()) {
-
-                UUID id = player.getUniqueId();
-                if(menuManager.getOpenMenu(id) == null || !menuManager.getOpenMenu(id).equals(this)) continue;
-
-                //registering player with new menu
-                menuManager.unregister(id);
-                player.closeInventory();
-
-                this.open();
-                player.updateInventory();
-            }
-        }
     }
 
-    private boolean isOpenForAnyone() {
-        return mLib.getInstance().getMenuManager().getOpenMenus().containsValue(this);
+    public Collection<? extends MenuItem> getContents() {
+        return contents.values();
     }
 
-    public Map<Integer, MenuItem> getCachedItems() {
-        return contents;
+    public MenuItem getItemAt(int slot) {
+        return contents.get(slot);
     }
-
 
     public void addItem(MenuItem menuItem)
     {
@@ -73,9 +60,9 @@ public abstract class Menu implements IMenu {
 
     }
 
-    public abstract Map<Integer, MenuItem> getContents(Player viewer);
+    public abstract void setContents(Player viewer);
 
-    public Inventory buildInv() {
+    public Inventory createInventory() {
 
         Inventory inv = Bukkit.createInventory(null,
                 getRows()*9, getTitle());
@@ -92,7 +79,7 @@ public abstract class Menu implements IMenu {
         p.closeInventory();
 
         mLib.getInstance().getMenuManager().register(viewerId, this);
-        p.openInventory(buildInv());
+        p.openInventory(createInventory());
     }
 
 
@@ -136,12 +123,12 @@ public abstract class Menu implements IMenu {
         if (!(o instanceof Menu)) return false;
         Menu menu = (Menu) o;
         return Objects.equal(getUniqueName(), menu.getUniqueName()) &&
-                Objects.equal(getCachedItems(), menu.getCachedItems());
+                Objects.equal(contents, menu.contents);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(getUniqueName(), getCachedItems());
+        return Objects.hashCode(getUniqueName(), contents);
     }
 
 

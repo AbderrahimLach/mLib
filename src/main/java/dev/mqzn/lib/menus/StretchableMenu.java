@@ -1,17 +1,19 @@
 package dev.mqzn.lib.menus;
 
+import org.bukkit.plugin.Plugin;
+
 import java.util.UUID;
 
 public abstract class StretchableMenu extends Menu{
 
     private final int rows;
-    public StretchableMenu(UUID viewer) {
-        super(viewer);
+    public StretchableMenu(Plugin plugin, UUID viewer) {
+        super(plugin, viewer);
         rows = buildRows();
     }
 
     private int buildRows() {
-        int capacity = this.getCachedItems().size();
+        int capacity = this.getContents().size();
         final int MAX_ITEMS_PER_ROW = 9;
 
         if(capacity <= MAX_ITEMS_PER_ROW) return 1;

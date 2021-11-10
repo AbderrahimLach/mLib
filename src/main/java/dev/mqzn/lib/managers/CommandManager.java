@@ -24,8 +24,6 @@ public class CommandManager {
     private final Map<Class<?>, ArgumentParser<?>> parsers;
 
     public CommandManager() {
-
-
         this.commands = new HashMap<>();
         try {
             Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
