@@ -31,11 +31,7 @@ Moreover, you must add the mLib dependency from github
       </repositories>
 
       <dependencies>
-        <dependency>
-            <groupId>com.github.jitpack</groupId>
-            <artifactId>maven-simple</artifactId>
-            <version>0.1</version>
-        </dependency>
+
         <dependency>
             <groupId>com.github.Mqzn</groupId>
             <artifactId>mLib</artifactId>
@@ -44,6 +40,8 @@ Moreover, you must add the mLib dependency from github
         </dependency>
       </dependencies>
 ```
+[![](https://jitpack.io/v/Mqzn/mLib.svg)](https://jitpack.io/#Mqzn/mLib)
+
 
 ***Some Guides on how to use each utility***
 - [Menus](../../wiki/Menus)
