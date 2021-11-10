@@ -57,7 +57,7 @@ public class Requirement {
     @FunctionalInterface
     public interface Executor {
 
-        <S extends CommandSender, Args extends List<CommandArg>> void execute(S sender, Args args);
+         void execute(CommandSender sender, List<CommandArg> args);
 
     }
 
