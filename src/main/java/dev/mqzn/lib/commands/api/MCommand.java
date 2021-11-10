@@ -194,8 +194,12 @@ public abstract class MCommand extends Command {
     }
 
 
-    public void addRequirement(Requirement.Criteria criteria, Requirement.Executor executor) {
+    protected void addRequirement(Requirement.Criteria criteria, Requirement.Executor executor) {
         requirements.add(Requirement.of(criteria, executor));
+    }
+
+    protected void addRequirement(Requirement requirement) {
+        requirements.add(requirement);
     }
 
 }
