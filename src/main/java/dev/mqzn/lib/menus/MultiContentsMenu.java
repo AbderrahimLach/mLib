@@ -24,17 +24,11 @@ public abstract class MultiContentsMenu extends PaginatedMenu {
 
     public abstract void setTotalItems();
 
-    /*
-        Items per one page !
-     */
     public abstract int getPageCapacity();
-
 
     public abstract int getPageRows();
 
-    /*
-        It may be a little heavy but it's the best option here
-     */
+
     @Override
     public void setPages(UUID id) {
 
