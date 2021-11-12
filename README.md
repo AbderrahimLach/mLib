@@ -14,7 +14,7 @@ There are currently two ways of using it
 - Maven Dependency
 
 ### Artifact Dependency
-You can download the jar directly from [here](../../releases/tag/1.1.3) , and use
+You can download the jar directly from [here](../../releases/tag/1.1.4) , and use
 it as an artifact
 
 ### Maven Dependency
@@ -35,7 +35,7 @@ Moreover, you must add the mLib dependency from github
         <dependency>
             <groupId>com.github.Mqzn</groupId>
             <artifactId>mLib</artifactId>
-            <version>1.1.3</version>
+            <version>1.1.4</version>
             <scope>provided</scope>
         </dependency>
       </dependencies>
