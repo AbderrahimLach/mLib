@@ -1,16 +1,14 @@
 package dev.mqzn.lib.backend;
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Objects;
 import com.google.common.io.ByteStreams;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginAwareness;
+
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.logging.Level;
 
@@ -28,6 +26,10 @@ public class SpigotConfigFile extends SpigotFile {
         return config;
     }
 
+    public void setConfig(FileConfiguration config) {
+        this.config = config;
+    }
+
     public void saveConfig() {
         try {
             config.save(getFile());
@@ -36,48 +38,38 @@ public class SpigotConfigFile extends SpigotFile {
         }
     }
 
-    private boolean isStrictlyUTF8() {
-        return plugin.getDescription().getAwareness().contains(PluginAwareness.Flags.UTF8);
-    }
-
 
     public void reloadConfig() {
+        if(!file.exists()) {
 
-        this.config = YamlConfiguration.loadConfiguration(file);
-        InputStream defConfigStream = plugin.getResource(getFileName());
+            try {
+                file.createNewFile();
 
-        if (defConfigStream != null) {
-            YamlConfiguration defConfig;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            if (!this.isStrictlyUTF8() && !FileConfiguration.UTF8_OVERRIDE) {
-                defConfig = new YamlConfiguration();
-
-                byte[] contents;
+            InputStream stream = plugin.getResource(this.getFileName());
+            YamlConfiguration defConfig = new YamlConfiguration();
+            if(stream != null) {
                 try {
-                    contents = ByteStreams.toByteArray(defConfigStream);
-                } catch (IOException ex) {
-                    plugin.getLogger().log(Level.SEVERE, "Unexpected failure reading config.yml", ex);
-                    return;
-                }
-
-                String text = new String(contents, Charset.defaultCharset());
-                if (!text.equals(new String(contents, Charsets.UTF_8))) {
-                    plugin.getLogger().warning("Default system encoding may have misread config.yml from plugin jar");
-                }
-
-                try {
+                    String text = getContentsFromStream(stream);
                     defConfig.loadFromString(text);
-                } catch (InvalidConfigurationException ex) {
-                    plugin.getLogger().log(Level.SEVERE, "Cannot load configuration from jar", ex);
+                } catch (IOException | InvalidConfigurationException e) {
+                    e.printStackTrace();
+                    plugin.getLogger().log(Level.SEVERE, "Unexpected failure reading/loading  " + this.getFileName(), e);
                 }
 
-            } else {
-                defConfig = YamlConfiguration.loadConfiguration(new InputStreamReader(defConfigStream, Charsets.UTF_8));
             }
 
             this.config.setDefaults(defConfig);
         }
 
+    }
+
+    private String getContentsFromStream(InputStream stream) throws IOException {
+        byte[] contents = ByteStreams.toByteArray(stream);
+        return new String(contents, Charset.defaultCharset());
     }
 
     @Override
