@@ -68,8 +68,12 @@ public abstract class SubCommand extends Requirement {
 
     public abstract void setRequirements();
 
-    protected void addRequirement(Criteria criteria, Executor executor) {
-        requirements.add(Requirement.of(criteria, executor));
+    protected void addRequirement(Criteria criteria, Executor executor, UsageArg... args) {
+        Requirement requirement = Requirement.of(criteria, executor);
+        for(UsageArg arg : args) {
+            requirement.setArg(arg);
+        }
+        requirements.add(requirement);
     }
 
     @Override

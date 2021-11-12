@@ -39,10 +39,15 @@ public class Requirement {
         argParses.put(argPosition, new UsageArg(argName, argPosition, argClassType, type));
     }
 
+    public void setArg(UsageArg arg) {
+        argParses.put(arg.getPosition(), arg);
+    }
+
     public String getUsage(MCommand command) {
-        String rest = argParses.values().stream().map(UsageArg::toString).collect(Collectors.joining());
+        String rest = argParses.values().stream().map(UsageArg::fullName).collect(Collectors.joining());
         return Translator.color("&c/" + command.getLabel() + " " + rest);
     }
+
 
     public Map<Integer, UsageArg> getArgParses() {
         return argParses;

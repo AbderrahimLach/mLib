@@ -12,19 +12,33 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 
 import java.lang.reflect.Field;
-import java.util.HashMap;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Optional;
 
 public class CommandManager {
 
-    private final Map<String, MCommand> commands;
     private CommandMap commandMap;
     private final Map<Class<?>, ArgumentParser<?>> parsers;
 
+    private static final ArgumentParser<String> DEFAULT_PARSER;
+
+    static {
+        DEFAULT_PARSER = new ArgumentParser<String>() {
+
+            @Override
+            public boolean matches(String arg) {
+                return true;
+            }
+
+            @Override
+            public String parse(String arg) {
+                return arg;
+            }
+        };
+    }
+
     public CommandManager() {
-        this.commands = new HashMap<>();
         try {
             Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
             field.setAccessible(true);
@@ -49,27 +63,16 @@ public class CommandManager {
         parsers.put(Boolean.class, booleanParser);
 
         parsers.put(IP.class, new IPParser());
-        parsers.put(String.class, new ArgumentParser<String>() {
-
-            @Override
-            public boolean matches(String arg) {
-                return true;
-            }
-
-            @Override
-            public String parse(String arg) {
-                return arg;
-            }
-        });
+        parsers.put(String.class, DEFAULT_PARSER);
 
     }
 
-    public Map<Class<?>, ArgumentParser<?>> getParsers() {
-        return parsers;
+
+    public Collection<? extends ArgumentParser<?>> getParsers() {
+        return parsers.values();
     }
 
     public void registerCommand(MCommand mCommand) {
-        commands.put(mCommand.getName(), mCommand);
         commandMap.register(mCommand.getName(), mCommand);
     }
 
@@ -80,26 +83,13 @@ public class CommandManager {
 
     public ArgumentParser<?> getArgumentParser (Class<?> type){
         if(!hasArgumentParser(type)) throw new IllegalArgumentException("Argument Parser for type " + type.getName() + " isn't registered!");
-
-        return parsers.get(type);
+        return parsers.getOrDefault(type, DEFAULT_PARSER);
     }
 
-    public Optional<MCommand> getCommand(String name) {
-
-        MCommand cmd = null;
-        for(MCommand mc : commands.values()) {
-            if(name.equals(mc.getName())) {
-                cmd = mc;
-                break;
-            }
-        }
-
-        return Optional.ofNullable(cmd);
-    }
 
     public static Class<?> getClazzType(String arg) {
 
-        for(ArgumentParser<?> parser : mLib.getInstance().getCommandManager().getParsers().values()) {
+        for(ArgumentParser<?> parser : mLib.getInstance().getCommandManager().getParsers()) {
             if(parser.matches(arg)) {
                 return parser.parse(arg).getClass();
             }

@@ -11,8 +11,8 @@ public class MenuComparator implements Comparator<IMenu> {
     }
 
 
-    public static boolean quickComparison(IMenu m1, IMenu m2) {
-        return m1.getUniqueName().equalsIgnoreCase(m2.getUniqueName());
+    public static boolean deepComparison(IMenu m1, IMenu m2) {
+        return m1.getUniqueName().equalsIgnoreCase(m2.getUniqueName()) && m1.equals(m2);
     }
 
 }

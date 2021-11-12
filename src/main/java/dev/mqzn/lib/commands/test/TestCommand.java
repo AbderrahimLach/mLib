@@ -12,7 +12,8 @@ public class TestCommand extends MCommand {
 
     @Override
     public void setRequirements() {
-        this.addRequirement((commandArgs -> commandArgs.size() == 0), ((sender, args) -> sender.sendMessage(Translator.color("&5WORKED"))));
+        this.addRequirement((commandArgs -> commandArgs.size() == 0),
+                ((sender, args) -> sender.sendMessage(Translator.color("&5WORKED"))));
     }
 
 
