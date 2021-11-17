@@ -30,6 +30,7 @@ public interface IStretchableMenu {
         if(capacity <= MAX_ITEMS_PER_ROW) return 1;
         if(capacity > 54) capacity = 54;
 
+        /*
         int computedRows = 0;
 
         while (capacity >= MAX_ITEMS_PER_ROW) {
@@ -37,9 +38,15 @@ public interface IStretchableMenu {
             capacity -= MAX_ITEMS_PER_ROW;
         }
 
-        //Alternative solution, but i love  the while loop XD
-        // computedRows = Math.round( (double)capacity/MAX_ITEMS_PER_ROW);
-        return computedRows;
 
+        return computedRows;
+       */
+
+        return (int) Math.round( (double)capacity/MAX_ITEMS_PER_ROW);
     }
+
+    //Alternative solution, but i love  the while loop XD
+
+
+
 }

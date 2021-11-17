@@ -1,6 +1,5 @@
 package dev.mqzn.lib.commands.api;
 
-import dev.mqzn.lib.mLib;
 import dev.mqzn.lib.managers.CommandManager;
 import dev.mqzn.lib.utils.Translator;
 import org.bukkit.command.Command;
@@ -62,8 +61,8 @@ public abstract class MCommand extends Command {
         }
 
         execute(sender, Arrays.stream(args).map(arg -> new CommandArg(indexOf(arg, args),
-                            mLib.getInstance().getCommandManager()
-                        .getArgumentParser(CommandManager.getClazzType(arg))
+                            CommandManager.getInstance()
+                        .getArgumentParser(CommandManager.getInstance().getClazzType(arg))
                         .parse(arg), arg)).collect(Collectors.toList()));
 
         return true;
@@ -154,8 +153,7 @@ public abstract class MCommand extends Command {
     private Optional<Requirement> getRequirementUsed(Set<Requirement> storedReqs, List<CommandArg> args) {
 
         Requirement rq = null;
-        requirements :
-        for (Requirement requirement : storedReqs) {
+        requirements : for (Requirement requirement : storedReqs) {
 
             if (!requirement.getCriteria().test(args)) continue;
 
@@ -172,12 +170,12 @@ public abstract class MCommand extends Command {
 
             }
 
-            for (Map.Entry<Integer, UsageArg> argEntry : requirement.getArgParses().entrySet()) {
+            for (UsageArg argEntry : requirement.getArgParses()) {
 
-                CommandArg arg = args.get(argEntry.getKey());
-                UsageArg wanted = argEntry.getValue();
-                ArgumentParser<?> parser = mLib.getInstance().getCommandManager()
-                        .getArgumentParser(wanted.getTypeClass());
+                CommandArg arg = args.get(argEntry.getPosition());
+
+                ArgumentParser<?> parser = CommandManager.getInstance()
+                        .getArgumentParser(argEntry.getTypeClass());
 
                 if(!arg.getParsedArg().equals(parser.parse(arg.getArgument()))) {
                     break requirements;
@@ -195,11 +193,16 @@ public abstract class MCommand extends Command {
 
 
     protected void addRequirement(Requirement.Criteria criteria, Requirement.Executor executor, UsageArg... usageArgs) {
-        requirements.add(Requirement.of(criteria, executor));
+        Requirement requirement = Requirement.of(criteria, executor);
+        for(UsageArg arg : usageArgs) {
+            requirement.setArg(arg);
+        }
+        requirements.add(requirement);
     }
 
     protected void addRequirement(Requirement requirement) {
         requirements.add(requirement);
     }
+
 
 }

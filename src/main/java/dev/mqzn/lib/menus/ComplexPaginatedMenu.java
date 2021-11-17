@@ -1,23 +1,24 @@
 package dev.mqzn.lib.menus;
 
 import dev.mqzn.lib.menus.items.MenuItem;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class MultiContentsMenu extends PaginatedMenu {
+public abstract class ComplexPaginatedMenu extends PaginatedMenu {
 
     private final List<MenuItem> totalItems ;
-    private final int pageEndSlot, pageStartSlot = 0;
+    private final int pageEndSlot;
 
     /**
      *
      * @param plugin , the plugin that is opening the gui
      * @param id, UUID of the viewer
      */
-    public MultiContentsMenu(Plugin plugin, UUID id) {
+    public ComplexPaginatedMenu(Plugin plugin, UUID id) {
         super(plugin, id);
         totalItems = new ArrayList<>();
         setTotalItems();
@@ -28,12 +29,29 @@ public abstract class MultiContentsMenu extends PaginatedMenu {
      * @author Mqzn
      * @date 17/11/2021
      *
-     * @param menuItem the item that will be added !
+     * @param item the item that will be added !
+     * @param slot the slot at which the item will be added to
+     * @param action the action when clicking on the item
      * That parameter includes the item stack, slot, and it's action
      */
-    public void addItem(MenuItem menuItem) {
-        totalItems.add(menuItem);
+    public void addItem(ItemStack item, int slot, MenuItem.ItemAction action) {
+        totalItems.add(new MenuItem(item, slot, action));
     }
+
+    /**
+     * @author Mqzn
+     * @date 17/11/2021
+     * @see MenuItem
+     *
+     * @param item the item that will be added !
+     * @param action the action when clicking on the item
+     * That parameter includes the item stack, slot, and it's action
+     */
+    public void addItem(ItemStack item, MenuItem.ItemAction action) {
+        totalItems.add(new MenuItem(item, action));
+    }
+
+
 
 
     /**
@@ -54,7 +72,7 @@ public abstract class MultiContentsMenu extends PaginatedMenu {
      * @return the slot at which the items will be set from
      */
     public int getPageStartSlot() {
-        return pageStartSlot;
+        return 0;
     }
 
 
@@ -80,7 +98,7 @@ public abstract class MultiContentsMenu extends PaginatedMenu {
      * @author Mqzn
      * @date 17/11/2021
      * Note: All pages will have the same number of rows !
-     * @see MultiContentsMenu
+     * @see ComplexPaginatedMenu
      * @return the number of rows of a one single page
      */
     public abstract int getPageRows();
@@ -88,10 +106,9 @@ public abstract class MultiContentsMenu extends PaginatedMenu {
 
     /**
      * @see PaginatedMenu
-     * @param id uuid of the viewer
      */
     @Override
-    public void setPages(UUID id) {
+    public void setPages() {
 
         //More efficient as we are caching the max pages for every iteration
         for (int i = 1, capacity = calculateMaxPages(); i < capacity+1; i++) {
@@ -115,7 +132,6 @@ public abstract class MultiContentsMenu extends PaginatedMenu {
     /**
      * @return total items cached to be set !
      */
-
     protected List<MenuItem> getTotalItems() {
         return totalItems;
     }

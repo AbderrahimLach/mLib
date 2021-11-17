@@ -6,7 +6,6 @@ import dev.mqzn.lib.menus.items.MenuItem;
 import dev.mqzn.lib.utils.ItemBuilder;
 import dev.mqzn.lib.utils.Translator;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.util.List;
@@ -25,9 +24,24 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
         this.menu = menu;
         this.title = menu.getTitle() + "#"  + index;
         setPageItems(menu);
+        this.loadMultipleItems();
 
-        if(menu instanceof MultiContentsMenu) {
-            MultiContentsMenu multiMenu = (MultiContentsMenu)menu;
+    }
+
+
+    public MenuPage(Plugin plugin, int index, M menu, int rows) {
+        super(plugin, menu.getViewer());
+        this.index = index;
+        this.menu = menu;
+        this.title = menu.getTitle() + " Page #" + index;
+        this.rows = rows;
+        setPageItems(menu);
+        this.loadMultipleItems();
+    }
+
+    private void loadMultipleItems() {
+        if(menu instanceof ComplexPaginatedMenu) {
+            ComplexPaginatedMenu multiMenu = (ComplexPaginatedMenu)menu;
             int capacity = multiMenu.getPageCapacity();
             int max = this.getIndex() * capacity;
             int min = max-capacity;
@@ -46,17 +60,6 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
                 this.setItem(item);
             }
         }
-
-    }
-
-
-    public MenuPage(Plugin plugin, int index, M menu, int rows) {
-        super(plugin, menu.getViewer());
-        this.index = index;
-        this.menu = menu;
-        this.title = menu.getTitle() + " Page #" + index;
-        this.rows = rows;
-        setPageItems(menu);
     }
 
     public void setRows(int rows) {
@@ -67,7 +70,7 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
         String display = "&aNext Page >>";
 
         MenuItem NEXT_PAGE = new MenuItem(new ItemBuilder(Material.ARROW, 1)
-                .setDisplay(display).build(), this.getSize()-1, ((player, itemStack) -> {
+                .setDisplay(display).build(), this.getSize()-1, ((player, itemStack, clickType) -> {
 
             try {
                 if(menu == null) return;
@@ -82,7 +85,7 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
         display = "&e<< Previous Page";
 
         MenuItem PREVIOUS_PAGE = new MenuItem(new ItemBuilder(Material.ARROW, 1)
-                .setDisplay(display).build(), this.getSize()-9, ((player, itemStack) -> {
+                .setDisplay(display).build(), this.getSize()-9, ((player, itemStack, clickType) -> {
 
             try {
                 menu.openPage(this.getIndex() - 1);
@@ -96,10 +99,6 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
 
         this.setItem(NEXT_PAGE);
         this.setItem(PREVIOUS_PAGE);
-    }
-
-    public int getSpaces() {
-        return this.getSize()-2;
     }
 
 
@@ -125,7 +124,7 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
 
 
     @Override
-    public void setContents(Player viewer) {
+    public void setContents() {
 
     }
 

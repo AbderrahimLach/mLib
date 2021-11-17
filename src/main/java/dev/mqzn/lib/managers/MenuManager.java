@@ -9,6 +9,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class MenuManager {
 
+    private static MenuManager INSTANCE;
+
+    public static MenuManager getInstance() {
+        if(INSTANCE == null) {
+            INSTANCE = new MenuManager();
+        }
+        return INSTANCE;
+    }
+
     private final Map<UUID, Menu> openMenus;
 
     public MenuManager() {

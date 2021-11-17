@@ -4,6 +4,7 @@ import com.google.common.base.Objects;
 import dev.mqzn.lib.utils.Translator;
 import org.bukkit.command.CommandSender;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,9 +49,11 @@ public class Requirement {
         return Translator.color("&c/" + command.getLabel() + " " + rest);
     }
 
-
-    public Map<Integer, UsageArg> getArgParses() {
-        return argParses;
+    public UsageArg getArgParse(int position) {
+        return argParses.get(position);
+    }
+    public Collection<? extends UsageArg> getArgParses() {
+        return argParses.values();
     }
 
     public void execute(CommandSender sender, List<CommandArg> args) {

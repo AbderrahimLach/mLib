@@ -2,7 +2,6 @@ package dev.mqzn.lib.menus.test;
 
 import dev.mqzn.lib.menus.MenuPage;
 import dev.mqzn.lib.menus.PaginatedMenu;
-import dev.mqzn.lib.menus.items.MenuItem;
 import dev.mqzn.lib.utils.ItemBuilder;
 import dev.mqzn.lib.utils.Translator;
 import org.bukkit.Material;
@@ -18,7 +17,7 @@ public class TestSimplePaginatedMenu extends PaginatedMenu {
     }
 
     @Override
-    public void setPages(UUID uuid) {
+    public void setPages() {
 
 
         ItemStack item1 = new ItemBuilder(Material.BEACON, 1)
@@ -27,31 +26,19 @@ public class TestSimplePaginatedMenu extends PaginatedMenu {
                 .setDisplay("&aWelcome").build();
 
         MenuPage<TestSimplePaginatedMenu> page = new MenuPage<>(plugin,1, this, 3);
-        page.setItem(new MenuItem(item1, 13, (player, item) -> {
+        page.setItem(item1, 13, (player, item, clickType) -> {
             player.closeInventory();
             player.sendMessage(Translator.color("&9HELLO &7" + player.getName()));
-        }));
+        });
 
-        page.setItem(new MenuItem(item2, 15, (p, item) -> {
+        page.setItem(item2, 15, (p, item, clickType) -> {
             p.closeInventory();
             p.sendMessage(Translator.color("&aWelcome &7" + p.getName()));
 
-        }));
+        });
 
         this.addDistinctPage(page);
 
-        /*new PageBuilder<>(1, this).setRows(3)
-
-                .setItems(
-                        new MenuItem(it, 13, (p, item) -> {
-                    p.closeInventory();
-                    p.sendMessage(Translator.color("&9HELLO &7" + p.getName()));
-                }),
-                        new MenuItem(it2, 15, (p, item) -> {
-                    p.closeInventory();
-                    p.sendMessage(Translator.color("&aWelcome &7" + p.getName()));
-
-                })).buildPage(map);*/
 
     }
 

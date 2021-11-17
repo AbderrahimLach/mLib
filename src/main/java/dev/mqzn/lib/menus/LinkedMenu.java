@@ -67,7 +67,7 @@ public abstract class LinkedMenu extends Menu {
         MenuLink linkMenu = getLinkIn(slot);
         if(linkMenu == null || linkMenu.getSlot() != slot) return;
 
-        IMenu target = linkMenu.getIMenu();
+        IMenu target = linkMenu.getLinkedMenu();
         if(target == null) return;
 
         clicker.closeInventory();
@@ -121,7 +121,7 @@ public abstract class LinkedMenu extends Menu {
         }
 
         //item is registered !
-        registeredItem.getItemActions().accept(player, item);
+        registeredItem.getItemActions().accept(player, item, e.getClick());
         e.setCancelled(true);
 
     }
@@ -131,19 +131,19 @@ public abstract class LinkedMenu extends Menu {
     private static final class MenuLink {
 
         private final int slot;
-        private final IMenu IMenu;
+        private final IMenu menu;
 
-        private MenuLink(int slot, IMenu IMenu) {
+        private MenuLink(int slot, IMenu menu) {
             this.slot = slot;
-            this.IMenu = IMenu;
+            this.menu = menu;
         }
 
         public int getSlot() {
             return slot;
         }
 
-        public IMenu getIMenu() {
-            return IMenu;
+        public IMenu getLinkedMenu() {
+            return menu;
         }
 
 
@@ -157,13 +157,13 @@ public abstract class LinkedMenu extends Menu {
             if (!(o instanceof MenuLink)) return false;
             MenuLink that = (MenuLink) o;
             return getSlot() == that.getSlot() &&
-                    Objects.equal(getIMenu(), that.getIMenu());
+                    Objects.equal(getLinkedMenu(), that.getLinkedMenu());
         }
 
 
         @Override
         public int hashCode() {
-            return Objects.hashCode(getSlot(), getIMenu());
+            return Objects.hashCode(getSlot(), getLinkedMenu());
         }
 
 

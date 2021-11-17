@@ -7,7 +7,6 @@ import dev.mqzn.lib.commands.api.identifiers.BooleanParser;
 import dev.mqzn.lib.commands.api.identifiers.DoubleParser;
 import dev.mqzn.lib.commands.api.identifiers.IPParser;
 import dev.mqzn.lib.commands.api.identifiers.IntegerParser;
-import dev.mqzn.lib.mLib;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 
@@ -17,6 +16,15 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CommandManager {
+
+    private static CommandManager INSTANCE;
+
+    public static CommandManager getInstance() {
+        if(INSTANCE == null) {
+            INSTANCE = new CommandManager();
+        }
+        return INSTANCE;
+    }
 
     private CommandMap commandMap;
     private final Map<Class<?>, ArgumentParser<?>> parsers;
@@ -87,9 +95,9 @@ public class CommandManager {
     }
 
 
-    public static Class<?> getClazzType(String arg) {
+    public Class<?> getClazzType(String arg) {
 
-        for(ArgumentParser<?> parser : mLib.getInstance().getCommandManager().getParsers()) {
+        for(ArgumentParser<?> parser : this.getParsers()) {
             if(parser.matches(arg)) {
                 return parser.parse(arg).getClass();
             }

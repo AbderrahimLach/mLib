@@ -1,10 +1,9 @@
 package dev.mqzn.lib.menus.test;
 
 import dev.mqzn.lib.menus.Menu;
-import dev.mqzn.lib.menus.items.MenuItem;
 import dev.mqzn.lib.utils.ItemBuilder;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 import java.util.UUID;
@@ -34,9 +33,9 @@ public class TestMenu extends Menu {
     }
 
     @Override
-    public void setContents(Player player) {
-        this.setItem(new MenuItem(new ItemBuilder(Material.BEDROCK).setDisplay("&amLib Test Item").build(),
-                (clicker, item) -> clicker.sendMessage("Hello")));
+    public void setContents() {
+        ItemStack item = new ItemBuilder(Material.BEDROCK).setDisplay("&amLib Test Item").build();
+        this.setItem(item, (clicker, itemStack, clickType) -> clicker.sendMessage("Hello"));
 
     }
 

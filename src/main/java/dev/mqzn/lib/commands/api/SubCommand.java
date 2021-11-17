@@ -15,7 +15,7 @@ public abstract class SubCommand extends Requirement {
     private final int position;
 
     private final Set<Requirement> requirements;
-    private final Set<SubCommand> children;
+    private final Set<? extends SubCommand> children;
 
     public SubCommand(String name, int position, Executor executor) {
         super( (args) -> !args.isEmpty()
@@ -37,7 +37,7 @@ public abstract class SubCommand extends Requirement {
         return requirements;
     }
 
-    public Set<SubCommand> getChildren() {
+    public Set<? extends SubCommand> getChildren() {
         return children;
     }
 

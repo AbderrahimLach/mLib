@@ -1,7 +1,6 @@
 package dev.mqzn.lib.menus.test;
 
 import dev.mqzn.lib.menus.LinkedMenu;
-import dev.mqzn.lib.menus.items.MenuItem;
 import dev.mqzn.lib.utils.ItemBuilder;
 import dev.mqzn.lib.utils.Translator;
 import org.bukkit.Material;
@@ -37,9 +36,12 @@ public class TestLinkedMenu extends LinkedMenu {
     }
 
     @Override
-    public void setContents(Player viewer) {
-        this.setItem(new MenuItem(new ItemBuilder(Material.BEDROCK, 1)
-                .setDisplay("&6TEST LINKED MENU").build(), 4, (p, item) -> {
+    public void setContents() {
+        this.setItem(new ItemBuilder(Material.BEDROCK, 1)
+                .setDisplay("&6TEST LINKED MENU").build(),
+                4,
+                //action
+                (p, item, clickType) -> {
 
             String msg;
             if(p.isOp()) {
@@ -50,7 +52,7 @@ public class TestLinkedMenu extends LinkedMenu {
 
             p.closeInventory();
             p.sendMessage(Translator.color(msg));
-        }));
+        });
     }
 
 }

@@ -1,7 +1,7 @@
 package dev.mqzn.lib.menus;
 
 import com.google.common.base.Objects;
-import dev.mqzn.lib.mLib;
+import dev.mqzn.lib.managers.MenuManager;
 import dev.mqzn.lib.menus.items.MenuItem;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -26,7 +26,7 @@ public abstract class Menu implements IMenu {
     public Menu(Plugin plugin, UUID viewerId) {
         this.viewerId = viewerId;
         contents = new ConcurrentHashMap<>();
-        this.setContents(Bukkit.getPlayer(viewerId));
+        this.setContents();
         this.plugin = plugin;
     }
 
@@ -41,6 +41,15 @@ public abstract class Menu implements IMenu {
      * @author Mqzn
      * @see MenuItem
      * @param item the menu item to set
+     */
+    public void setItem(ItemStack item, int slot, MenuItem.ItemAction action) {
+        contents.put(slot, new MenuItem(item, slot, action));
+    }
+
+    /**
+     * @author Mqzn
+     * @see MenuItem
+     * @param item the menu item object to set
      */
     public void setItem(MenuItem item) {
         contents.put(item.getSlot(), item);
@@ -70,20 +79,36 @@ public abstract class Menu implements IMenu {
         return contents.get(slot);
     }
 
-    public void addItem(MenuItem menuItem)
-    {
-
+    /**
+     * @author Mqzn
+     * @see MenuItem
+     *
+     * @param itemStack the item to be added
+     * @param action the action of the item when clicked on
+     *
+     * @apiNote the slot will be the next empty one
+     */
+    public void setItem(ItemStack itemStack, MenuItem.ItemAction action) {
         int slot = nextEmptySlot();
         if(slot == -1) return;
 
-        menuItem.setSlot(slot);
-        this.setItem(menuItem);
+        this.setItem(itemStack, slot, action);
 
     }
 
-    public abstract void setContents(Player viewer);
+    /**
+     * @author Mqzn
+     * @date 17/11/2021
+     *
+     * @apiNote Defines the way to set the contents
+     */
+    public abstract void setContents();
 
-    public Inventory createInventory() {
+    /**
+     * Creates inventory from the cached items, title and rows
+     * @return the inventory created
+     */
+    private Inventory createInventory() {
 
         Inventory inv = Bukkit.createInventory(null,
                 getRows()*9, getTitle());
@@ -96,10 +121,10 @@ public abstract class Menu implements IMenu {
 
     public void open() {
         Player p = Bukkit.getPlayer(viewerId);
-        mLib.getInstance().getMenuManager().unregister(viewerId);
+        MenuManager.getInstance().unregister(viewerId);
         p.closeInventory();
 
-        mLib.getInstance().getMenuManager().register(viewerId, this);
+        MenuManager.getInstance().register(viewerId, this);
         p.openInventory(createInventory());
     }
 
@@ -121,7 +146,7 @@ public abstract class Menu implements IMenu {
         }
 
         //item is registered !
-        registeredItem.getItemActions().accept(player, item);
+        registeredItem.getItemActions().accept(player, item, e.getClick());
         e.setCancelled(true);
 
     }

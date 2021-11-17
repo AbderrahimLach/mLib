@@ -1,24 +1,25 @@
 package dev.mqzn.lib.menus.items;
 
 import com.google.common.base.Objects;
+import dev.mqzn.lib.utils.TriConsumer;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.inventory.ItemStack;
-import java.util.function.BiConsumer;
 
 public class MenuItem implements Comparable<MenuItem> {
 
     private final ItemStack item;
-    private final BiConsumer<Player, ItemStack> itemActions;
+    private final ItemAction itemActions;
     private int slot;
 
-    public MenuItem(ItemStack item,int slot, BiConsumer<Player, ItemStack> itemActions) {
+    public MenuItem(ItemStack item, int slot, ItemAction itemActions) {
         this.item = item;
         this.slot = slot;
         this.itemActions = itemActions;
     }
 
 
-    public MenuItem(ItemStack item, BiConsumer<Player, ItemStack> itemActions) {
+    public MenuItem(ItemStack item, ItemAction itemActions) {
         this.item = item;
         this.itemActions = itemActions;
     }
@@ -35,11 +36,10 @@ public class MenuItem implements Comparable<MenuItem> {
         return slot;
     }
 
-    public BiConsumer<Player, ItemStack> getItemActions() {
+    public ItemAction getItemActions() {
         return itemActions;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,5 +62,8 @@ public class MenuItem implements Comparable<MenuItem> {
         return this.getSlot()-o.getSlot();
     }
 
+    @FunctionalInterface
+    public interface ItemAction extends TriConsumer<Player, ItemStack, ClickType> {
 
+    }
 }

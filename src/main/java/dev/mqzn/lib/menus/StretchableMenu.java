@@ -6,9 +6,10 @@ import java.util.UUID;
 
 public abstract class StretchableMenu extends Menu implements IStretchableMenu{
 
-    private final int rows = ((IStretchableMenu)this).getRows();
+    private final int rows;
     public StretchableMenu(Plugin plugin, UUID viewer) {
         super(plugin, viewer);
+        rows = ((IStretchableMenu)this).getRows();
     }
 
     @Override

@@ -1,7 +1,7 @@
 package dev.mqzn.lib.menus;
 
 import com.google.common.base.Objects;
-import dev.mqzn.lib.mLib;
+import dev.mqzn.lib.managers.MenuManager;
 import dev.mqzn.lib.menus.exceptions.MenuPageOutOfBounds;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -25,7 +25,7 @@ public abstract class PaginatedMenu implements IMenu {
         this.viewer = viewer;
         this.plugin = plugin;
 
-        this.setPages(viewer);
+        this.setPages();
     }
 
     public UUID getViewer() {
@@ -67,7 +67,7 @@ public abstract class PaginatedMenu implements IMenu {
         Player player  = Bukkit.getPlayer(viewer);
 
         player.closeInventory();
-        mLib.getInstance().getMenuManager().register(viewer, page);
+        MenuManager.getInstance().register(viewer, page);
 
         currentPage = pageIndex;
         page.open();
@@ -76,7 +76,7 @@ public abstract class PaginatedMenu implements IMenu {
     /**
      * defines how each sub class menu can define it's own pages
      */
-    public abstract void setPages(UUID viewer);
+    public abstract void setPages();
 
 
     /**

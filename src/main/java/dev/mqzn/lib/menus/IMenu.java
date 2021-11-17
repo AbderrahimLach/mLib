@@ -1,7 +1,7 @@
 package dev.mqzn.lib.menus;
 
 
-import dev.mqzn.lib.mLib;
+import dev.mqzn.lib.managers.MenuManager;
 import org.bukkit.entity.Player;
 
 public interface IMenu {
@@ -27,7 +27,7 @@ public interface IMenu {
      * @param player the player for which the menu will be closed
      */
     static void close(Player player) {
-        mLib.getInstance().getMenuManager().close(player);
+        MenuManager.getInstance().close(player);
     }
 
 
