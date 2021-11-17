@@ -12,7 +12,7 @@ public class MenuComparator implements Comparator<IMenu> {
 
 
     public static boolean deepComparison(IMenu m1, IMenu m2) {
-        return m1.getUniqueName().equalsIgnoreCase(m2.getUniqueName()) && m1.equals(m2);
+        return new MenuComparator().compare(m1, m2)==0 && m1.equals(m2);
     }
 
 }

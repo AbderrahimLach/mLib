@@ -18,8 +18,10 @@ public class TestMultiPaginatedMenu extends MultiContentsMenu {
 
     @Override
     public void setTotalItems() {
+
         ItemStack it = new ItemBuilder(Material.WOOD_AXE)
                 .setDisplay("&cTest Axe").build();
+
         for (int i = 0; i < 5000; i++) {
             this.addItem(new MenuItem(it, (p, item) ->
                     p.sendMessage(Translator.color("&7You CLICKED ON " + item.getItemMeta().getDisplayName()))));

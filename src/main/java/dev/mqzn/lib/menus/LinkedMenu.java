@@ -25,19 +25,42 @@ public abstract class LinkedMenu extends Menu {
     }
 
 
-
+    /**
+     * @author Mqzn
+     * @see MenuLink
+     * @param player set the linked slots(keys) for the player
+     */
     public abstract void setLinkedSlots(Player player);
 
 
+    /**
+     * @author Mqzn
+     * Adds a link to a menu
+     * @see MenuLink
+     *
+     * @param slot the key of the link
+     * @param IMenu the menu to which the key leads
+     */
     public void addMenuLink(int slot, IMenu IMenu) {
-        linkedSlots.put(slot, new MenuLink(slot, IMenu));
+        linkedSlots.put(slot, MenuLink.of(slot, IMenu));
     }
 
 
+    /**
+     * @author Mqzn
+     *
+     * @param slot the key containing the link
+     * @return returns the link at the specific slot/key
+     */
     public MenuLink getLinkIn(int slot) {
         return linkedSlots.getOrDefault(slot, null);
     }
 
+    /**
+     * A method to process the opening of a linked menu for the player
+     * @param clicker the player to be open the linked menu for
+     * @param slot the slot/key at which the link is
+     */
 
     public void linkTo(Player clicker, int slot) {
 
@@ -66,6 +89,12 @@ public abstract class LinkedMenu extends Menu {
 
     }
 
+
+    /**
+     * @author Mqzn
+     * @see Menu
+     * @param e click event to register the links
+     */
 
     @Override
     public void parseOnClick(InventoryClickEvent e) {
@@ -99,7 +128,7 @@ public abstract class LinkedMenu extends Menu {
 
 
 
-    protected static final class MenuLink {
+    private static final class MenuLink {
 
         private final int slot;
         private final IMenu IMenu;

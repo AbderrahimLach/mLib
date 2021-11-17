@@ -9,6 +9,8 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
+import java.util.List;
+
 public class MenuPage<M extends PaginatedMenu> extends Menu {
 
     private final String title;
@@ -23,6 +25,28 @@ public class MenuPage<M extends PaginatedMenu> extends Menu {
         this.menu = menu;
         this.title = menu.getTitle() + "#"  + index;
         setPageItems(menu);
+
+        if(menu instanceof MultiContentsMenu) {
+            MultiContentsMenu multiMenu = (MultiContentsMenu)menu;
+            int capacity = multiMenu.getPageCapacity();
+            int max = this.getIndex() * capacity;
+            int min = max-capacity;
+
+            List<MenuItem> total = multiMenu.getTotalItems();
+
+            int c = Math.min(max, total.size());
+            for(int i = min; i < c; i++) {
+
+                MenuItem item = total.get(i);
+                int slot = this.nextEmptySlot();
+
+                if(slot < multiMenu.getPageStartSlot() || slot > multiMenu.getPageEndSlot()) break;
+
+                item.setSlot(slot);
+                this.setItem(item);
+            }
+        }
+
     }
 
 

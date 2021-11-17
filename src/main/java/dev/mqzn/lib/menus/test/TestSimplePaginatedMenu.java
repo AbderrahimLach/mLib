@@ -21,19 +21,18 @@ public class TestSimplePaginatedMenu extends PaginatedMenu {
     public void setPages(UUID uuid) {
 
 
-        ItemStack it = new ItemBuilder(Material.BEACON, 1)
+        ItemStack item1 = new ItemBuilder(Material.BEACON, 1)
                 .setDisplay("&9HELLO").build();
-
-        ItemStack it2 = new ItemBuilder(Material.DIAMOND, 1)
+        ItemStack item2 = new ItemBuilder(Material.DIAMOND, 1)
                 .setDisplay("&aWelcome").build();
 
         MenuPage<TestSimplePaginatedMenu> page = new MenuPage<>(plugin,1, this, 3);
-        page.setItem(new MenuItem(it, 13, (player, item) -> {
+        page.setItem(new MenuItem(item1, 13, (player, item) -> {
             player.closeInventory();
             player.sendMessage(Translator.color("&9HELLO &7" + player.getName()));
         }));
 
-        page.setItem(new MenuItem(it2, 15, (p, item) -> {
+        page.setItem(new MenuItem(item2, 15, (p, item) -> {
             p.closeInventory();
             p.sendMessage(Translator.color("&aWelcome &7" + p.getName()));
 

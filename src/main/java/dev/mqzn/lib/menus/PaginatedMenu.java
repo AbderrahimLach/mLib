@@ -36,13 +36,21 @@ public abstract class PaginatedMenu implements IMenu {
         pages.put(menuPage.getIndex(), menuPage);
     }
 
+    /**
+     * @author Mqzn
+     * @apiNote use this if you ever need to get all
+     * pages that are set to the menu
+     * @see MenuPage<PaginatedMenu>
+     * @return Get cached pages
+     */
+
     public Collection<MenuPage<? extends PaginatedMenu>> getPages() {
         return pages.values();
     }
 
     /**
-     * @Author Mqzn
-     * @Discord Mqzn#8141
+     * @author Mqzn
+     * @discord Mqzn#8141
      *
      * @param pageIndex the index of the page menu to open !
      *

@@ -18,10 +18,10 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class Menu implements IMenu {
 
-    private final UUID viewerId;
+    protected final UUID viewerId;
     private final Map<Integer, MenuItem> contents;
 
-    protected Plugin plugin;
+    protected final Plugin plugin;
 
     public Menu(Plugin plugin, UUID viewerId) {
         this.viewerId = viewerId;
@@ -30,21 +30,42 @@ public abstract class Menu implements IMenu {
         this.plugin = plugin;
     }
 
-    public UUID getViewerId() {
-        return viewerId;
-    }
-
-
+    /**
+     * @author Mqzn
+     * defines each row of the child class menu
+     * @return rows of the  menu
+     */
     public abstract int getRows();
 
+    /**
+     * @author Mqzn
+     * @see MenuItem
+     * @param item the menu item to set
+     */
     public void setItem(MenuItem item) {
         contents.put(item.getSlot(), item);
     }
 
+    /**
+     * @author Mqzn
+     * @see Collection
+     * @see MenuItem
+     * @return cached menu items
+     */
     public Collection<? extends MenuItem> getContents() {
         return contents.values();
     }
 
+
+    /**
+     * @author Mqzn
+     * @see MenuItem
+     *
+     * @date 17/11/2021
+     *
+     * @param slot the slot at which the item is
+     * @return gets the item at the specific slot
+     */
     public MenuItem getItemAt(int slot) {
         return contents.get(slot);
     }
