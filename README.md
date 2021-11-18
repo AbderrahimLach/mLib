@@ -49,7 +49,7 @@ making it easiers for developers to use and to prevent duplication of code
 You can download the jar directly from [here](../../releases/tag/1.1.6) , and place it in your plugins folder
 then just restart the server and here you go !
 
-***Some Guides on how to use each utility***
+## Utilities Guides
 - [Menus](../../wiki/Menus)
 - [Commands](../../wiki/Commands)
 
