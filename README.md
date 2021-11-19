@@ -52,5 +52,6 @@ then just restart the server and here you go !
 ## Utilities Guides
 - [Menus](../../wiki/Menus)
 - [Commands](../../wiki/Commands)
+- [Files & Configs](../../wiki/Files_And_Configs)
 - [Other](../../wiki/Other-Utilities)
 
