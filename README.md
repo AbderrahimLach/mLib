@@ -9,7 +9,7 @@ This library includes the following utilities:
 
 
 ## Using mLib
-There are currently two ways of using it
+There are currently two ways of using it as a dependency in your project
 - Artifact Dependency
 - Maven Dependency
 
@@ -35,15 +35,23 @@ Moreover, you must add the mLib dependency from github
         <dependency>
             <groupId>com.github.Mqzn</groupId>
             <artifactId>mLib</artifactId>
-            <version>1.1.4</version>
-            <scope>provided</scope>
+            <version>-1.1.6-g45830b7-5</version>
+            <scope>provided</scope> 
         </dependency>
       </dependencies>
 ```
 [![](https://jitpack.io/v/Mqzn/mLib.svg)](https://jitpack.io/#Mqzn/mLib)
 
+## Using mLib on your server
+mLib works as an independent plugin so that it register it's listeners on it's own
+making it easiers for developers to use and to prevent duplication of code
 
-***Some Guides on how to use each utility***
+You can download the jar directly from [here](../../releases/tag/1.1.6) , and place it in your plugins folder
+then just restart the server and here you go !
+
+## Utilities Guides
 - [Menus](../../wiki/Menus)
 - [Commands](../../wiki/Commands)
+- [Files & Configs](../../wiki/Files_And_Configs)
+- [Other](../../wiki/Other-Utilities)
 
