@@ -16,7 +16,8 @@ public class Translator {
     }
 
     public static List<String> colorList(List<String> list) {
-        return list.stream().map(Translator::color).collect(Collectors.toList());
+        return list.stream().map(Translator::color)
+                .collect(Collectors.toList());
     }
 
     public static String formatCase(String txt) {

@@ -1,43 +1,53 @@
 package dev.mqzn.lib.commands.api;
 
 import com.google.common.base.Objects;
-import dev.mqzn.lib.utils.Translator;
 import org.bukkit.command.CommandSender;
 
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 public abstract class SubCommand extends Requirement {
 
     private final String name;
     private final int position;
 
-    private final Set<Requirement> requirements;
-    private final Set<? extends SubCommand> children;
+    private final HashSet<Requirement> requirements;
+    private final HashSet<SubCommand> children;
 
-    public SubCommand(String name, int position, Executor executor) {
-        super( (args) -> !args.isEmpty()
-                && args.get(position).getArgument()
-                        .equalsIgnoreCase(name)
-                , executor);
+    public SubCommand(String name, int position) {
+        super((args)-> position >= 0 && position <= args.size()-1
+                && args.get(position) != null
+                && args.get(position).getArgument().equalsIgnoreCase(name));
 
         this.name = name;
         this.position = position;
 
-        requirements = new LinkedHashSet<>();
+        requirements = new HashSet<>();
         this.setRequirements();
-        children = requirements.stream()
-                .filter(req -> req instanceof SubCommand).map(req -> (SubCommand)req)
-                .collect(Collectors.toSet());
+
+        children = this.collectChildren();
+        this.separateRequirements();
     }
+    private HashSet<SubCommand> collectChildren() {
+        HashSet<SubCommand> kids = new HashSet<>();
+        for (Requirement requirement : requirements) {
+            if(requirement instanceof SubCommand) {
+                kids.add((SubCommand)requirement);
+            }
+        }
+        return kids;
+    }
+    private void separateRequirements() {
+        this.requirements.removeIf(rq -> rq instanceof SubCommand);
+    }
+
 
     public Set<Requirement> getRequirements() {
         return requirements;
     }
 
-    public Set<? extends SubCommand> getChildren() {
+    public Set<SubCommand> getChildren() {
         return children;
     }
 
@@ -45,12 +55,12 @@ public abstract class SubCommand extends Requirement {
         return !children.isEmpty();
     }
 
-    public void sendUsage(MCommand command, CommandSender sender, List<CommandArg> args) {
-        sender.sendMessage(Translator.color("&9/" + this.getName() + " &eUsages: "));
+    public void sendUsage(MCommand command, CommandSender sender) {
         for(Requirement reqs : this.getRequirements()) {
-            if(reqs.getCriteria().test(args)) {
-                sender.sendMessage(Translator.color("&7&l- " + reqs.getUsage(command)));
-            }
+            sender.sendMessage(reqs.getUsage(command, this));
+        }
+        for(SubCommand child : this.getChildren()) {
+            sender.sendMessage(child.getUsage(command, this));
         }
     }
 
@@ -73,7 +83,19 @@ public abstract class SubCommand extends Requirement {
         for(UsageArg arg : args) {
             requirement.setArg(arg);
         }
-        requirements.add(requirement);
+        this.addRequirement(requirement);
+    }
+
+    protected void addChildren(SubCommand... children) {
+        this.children.addAll(Arrays.asList(children));
+    }
+
+    protected void addRequirement(Requirement requirement) {
+        if(requirement instanceof  SubCommand) {
+            children.add((SubCommand)requirement);
+        }else {
+            requirements.add(requirement);
+        }
     }
 
     @Override

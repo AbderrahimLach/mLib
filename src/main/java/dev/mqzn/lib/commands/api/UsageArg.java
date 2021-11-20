@@ -2,7 +2,7 @@ package dev.mqzn.lib.commands.api;
 
 import com.google.common.base.Objects;
 
-public class UsageArg {
+public class UsageArg implements Comparable<UsageArg>{
 
     private final String name;
     private final int position;
@@ -54,6 +54,11 @@ public class UsageArg {
     @Override
     public String toString() {
         return "<" + this.getName().toUpperCase() + "> ";
+    }
+
+    @Override
+    public int compareTo(UsageArg o) {
+        return this.getPosition()-o.getPosition();
     }
 
 

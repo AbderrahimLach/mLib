@@ -9,9 +9,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class mLib extends JavaPlugin {
 
+    private static mLib instance;
 
     @Override
     public void onEnable() {
+        instance = this;
 
         CommandManager.getInstance().registerCommand(new TestCommand());
 
@@ -28,6 +30,8 @@ public final class mLib extends JavaPlugin {
         // Plugin shutdown logic
         this.reloadConfig();
     }
-    
 
+    public static mLib getInstance() {
+        return instance;
+    }
 }

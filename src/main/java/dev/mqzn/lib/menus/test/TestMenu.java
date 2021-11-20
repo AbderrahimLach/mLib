@@ -2,7 +2,10 @@ package dev.mqzn.lib.menus.test;
 
 import dev.mqzn.lib.menus.Menu;
 import dev.mqzn.lib.utils.ItemBuilder;
+import dev.mqzn.lib.utils.ItemEnchant;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
@@ -34,7 +37,17 @@ public class TestMenu extends Menu {
 
     @Override
     public void setContents() {
-        ItemStack item = new ItemBuilder(Material.BEDROCK).setDisplay("&amLib Test Item").build();
+        ItemStack item = new ItemBuilder(Material.DIAMOND_SWORD)
+                .setDisplay("&amLib Test Item")
+                .setLore("&7&l&m-------------",
+                        "&2Test Lore",
+                        "&7&l&m-------------")
+                .setUnbreakable(true)
+                .addEnchants(ItemEnchant.of(Enchantment.DAMAGE_ALL, 1),
+                        ItemEnchant.of(Enchantment.DURABILITY, 2))
+                .addFlags(ItemFlag.HIDE_ENCHANTS, ItemFlag.HIDE_UNBREAKABLE)
+                .build();
+
         this.setItem(item, (clicker, itemStack, clickType) -> clicker.sendMessage("Hello"));
 
     }

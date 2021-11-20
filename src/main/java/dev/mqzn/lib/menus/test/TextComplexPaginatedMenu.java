@@ -10,9 +10,9 @@ import org.bukkit.plugin.Plugin;
 
 import java.util.UUID;
 
-public class TestMultiPaginatedMenu extends ComplexPaginatedMenu {
+public class TextComplexPaginatedMenu extends ComplexPaginatedMenu {
 
-    public TestMultiPaginatedMenu(Plugin plugin, UUID id) {
+    public TextComplexPaginatedMenu(Plugin plugin, UUID id) {
         super(plugin, id);
     }
 
@@ -31,17 +31,30 @@ public class TestMultiPaginatedMenu extends ComplexPaginatedMenu {
         }
     }
 
-
+    //number of items per page
     @Override
     public int getPageCapacity() {
         return 12;
     }
 
+    //number of rows of each page
     @Override
     public int getPageRows() {
         return 3;
     }
 
+
+    //The slot to start with when adding items, per page
+    @Override
+    public int getPageStartSlot() {
+        return 2;
+    }
+
+    //The slot to end adding items, per page
+    @Override
+    public int getPageEndSlot() {
+        return super.getPageEndSlot();
+    }
 
     @Override
     public String getUniqueName() {

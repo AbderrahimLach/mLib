@@ -1,26 +1,30 @@
 package dev.mqzn.lib.commands.api;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Maps;
 import dev.mqzn.lib.utils.Translator;
 import org.bukkit.command.CommandSender;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class Requirement {
 
     private final Executor actions;
     private final Criteria criteria;
-    private final Map<Integer, UsageArg> argParses;
+    private final HashMap<Integer, UsageArg> argParses = Maps.newHashMap();
 
     protected Requirement(Criteria criteria, Executor actions) {
         this.criteria = criteria;
         this.actions = actions;
-        argParses = new HashMap<>();
+
+    }
+
+    protected Requirement(Criteria criteria) {
+        this.criteria = criteria;
+        this.actions = (sender, args) -> {};
     }
 
     public static Requirement of(Criteria criteria, Executor executor) {
@@ -45,8 +49,18 @@ public class Requirement {
     }
 
     public String getUsage(MCommand command) {
-        String rest = argParses.values().stream().map(UsageArg::fullName).collect(Collectors.joining());
-        return Translator.color("&c/" + command.getLabel() + " " + rest);
+        return this.getUsage(command, null);
+    }
+
+    public String getUsage(MCommand command, SubCommand subCommand) {
+        StringBuilder rest = new StringBuilder();
+        argParses.values().stream().sorted().map(UsageArg::fullName)
+                .forEachOrdered(str -> rest.append(str).append(" "));
+
+        return Translator.color("&8&l[&9+&8&l] &a/"
+                + command.getLabel() + " " +
+                (subCommand != null ? (subCommand.getName() + " ") : "" )
+                + rest.toString());
     }
 
     public UsageArg getArgParse(int position) {
@@ -57,6 +71,8 @@ public class Requirement {
     }
 
     public void execute(CommandSender sender, List<CommandArg> args) {
+        if(criteria == null || this.actions == null) return;
+
         if(criteria.test(args)) {
             this.getExecutor().execute(sender, args);
         }

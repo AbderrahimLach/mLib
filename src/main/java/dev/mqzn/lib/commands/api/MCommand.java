@@ -60,34 +60,37 @@ public abstract class MCommand extends Command {
             return true;
         }
 
-        execute(sender, Arrays.stream(args).map(arg -> new CommandArg(indexOf(arg, args),
-                            CommandManager.getInstance()
-                        .getArgumentParser(CommandManager.getInstance().getClazzType(arg))
-                        .parse(arg), arg)).collect(Collectors.toList()));
+        execute(sender, Arrays.stream(args).map(arg -> {
+            int index = indexOf(arg, args);
+            if(index == -1) return null;
+            return new CommandArg(index,
+                    CommandManager.getInstance()
+                            .getArgumentParser(CommandManager.getInstance().getClazzType(arg))
+                            .parse(arg), arg);
+        }).collect(Collectors.toList()));
 
         return true;
     }
 
     private int indexOf(String arg, String[] args) {
-        return Arrays.asList(args).indexOf(arg);
+        for (int i = 0; i < args.length; i++) {
+            if(args[i].equalsIgnoreCase(arg)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     public void execute(CommandSender sender, List<CommandArg> args) {
-
+        args.removeIf(Objects::isNull);
         Optional<Requirement> found = getRequirementUsed(requirements, args);
 
         if(!found.isPresent()) {
-
-            sender.sendMessage("&9/" + this.getName() + " &eUsages: ");
-            for(Requirement reqs : requirements) {
-                if(reqs.getCriteria().test(args)) {
-                    sender.sendMessage(Translator.color("&7&l- " + reqs.getUsage(this)));
-                }
-            }
+            this.sendAllUsages(sender);
             return;
         }
-        Requirement req = found.get();
 
+        Requirement req = found.get();
         if(req.getExecutor() != null && !(req instanceof SubCommand)) {
             req.execute(sender, args);
             return;
@@ -99,13 +102,23 @@ public abstract class MCommand extends Command {
             return;
         }
 
-        executeChildren(subCommand, sender, args);
+        Optional<Requirement> rq =
+                this.getRequirementUsed(subCommand.getRequirements(), args);
+
+        if(rq.isPresent()) {
+            rq.get().execute(sender, args);
+        }else {
+            executeChildren(subCommand, sender, args);
+        }
+
+
+
 
     }
 
     private void executeChildren(SubCommand subCommand, CommandSender sender, List<CommandArg> args) {
 
-        Optional<Requirement> subReqSafe = this.getRequirementUsed(subCommand.getRequirements(), args);
+        Optional<Requirement> subReqSafe = this.getRequirementUsed(subCommand.getChildren(), args);
 
         if(subReqSafe.isPresent()) {
             subReqSafe.get().execute(sender, args);
@@ -113,14 +126,10 @@ public abstract class MCommand extends Command {
         }
 
         //base case
-        if(!subCommand.isParent()) {
-            subCommand.sendUsage(this, sender, args);
-            return;
-        }
-
         Optional<SubCommand> subChildUsed = getChildUsed(subCommand, args);
-        if(!subChildUsed.isPresent()) {
-            subCommand.sendUsage(this, sender, args);
+
+        if(!subCommand.isParent() || !subChildUsed.isPresent()) {
+            subCommand.sendUsage(this, sender);
             return;
         }
 
@@ -130,14 +139,20 @@ public abstract class MCommand extends Command {
     private Optional<SubCommand> getChildUsed(SubCommand parent, List<CommandArg> args) {
 
         Set<? extends SubCommand> children = parent.getChildren();
-        assert parent.getPosition() < args.size();
+
+        int pos = parent.getPosition();
+        assert pos > 0 &&
+                pos <= args.size()-1;
 
         SubCommand childSafe = null;
 
-        for (int start = parent.getPosition(); start < args.size(); start++) {
+        for (int start = pos+1; start <= args.size()-1; start++) {
+
             for(SubCommand child : children) {
-                if (child.getPosition() == start
-                        && child.getName().equalsIgnoreCase(args.get(start).getArgument())) {
+
+                if (child.getPosition() == start && child.getName()
+                        .equalsIgnoreCase(args.get(start).getArgument())) {
+
                     childSafe = child;
                     break;
                 }
@@ -150,7 +165,7 @@ public abstract class MCommand extends Command {
 
 
 
-    private Optional<Requirement> getRequirementUsed(Set<Requirement> storedReqs, List<CommandArg> args) {
+    private Optional<Requirement> getRequirementUsed(Set<? extends Requirement> storedReqs, List<CommandArg> args) {
 
         Requirement rq = null;
         requirements : for (Requirement requirement : storedReqs) {
@@ -160,13 +175,16 @@ public abstract class MCommand extends Command {
             if(requirement instanceof SubCommand) {
 
                 SubCommand subCommand = (SubCommand)requirement;
-                for (int i = 0; i < args.size(); i++) {
-                    if(subCommand.getPosition() == i
-                            && args.get(i).getArgument().equalsIgnoreCase(subCommand.getName())) {
-                        rq = subCommand;
-                        break requirements;
-                    }
+                int pos = subCommand.getPosition();
+                if(!args.isEmpty() && pos >= 0 &&
+                        pos <= args.size()-1 &&
+                        args.get(pos).getArgument()
+                                .equalsIgnoreCase(subCommand.getName())) {
+
+                    rq = requirement;
+                    break;
                 }
+
 
             }
 
@@ -177,8 +195,8 @@ public abstract class MCommand extends Command {
                 ArgumentParser<?> parser = CommandManager.getInstance()
                         .getArgumentParser(argEntry.getTypeClass());
 
-                if(!arg.getParsedArg().equals(parser.parse(arg.getArgument()))) {
-                    break requirements;
+                if(!Objects.equals(arg.getParsedArg(), parser.parse(arg.getArgument()) )) {
+                    continue requirements;
                 }
 
             }
@@ -204,5 +222,15 @@ public abstract class MCommand extends Command {
         requirements.add(requirement);
     }
 
+    public void sendAllUsages(CommandSender sender) {
+
+        for(Requirement rq : requirements)
+            if (rq instanceof SubCommand) {
+                ((SubCommand) rq).sendUsage(this, sender);
+            } else {
+                sender.sendMessage(rq.getUsage(this));
+            }
+
+    }
 
 }
