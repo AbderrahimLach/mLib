@@ -35,7 +35,7 @@ Moreover, you must add the mLib dependency from github
         <dependency>
             <groupId>com.github.Mqzn</groupId>
             <artifactId>mLib</artifactId>
-            <version>1.1.7</version>
+            <version>1.1.8</version>
             <scope>provided</scope> 
         </dependency>
       </dependencies>
