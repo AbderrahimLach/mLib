@@ -2,4 +2,5 @@ name: mLib
 version: ${project.version}
 main: dev.mqzn.lib.mLib
 authors: [Mqzn]
+website: https://github.com/Mqzn/mLib
 description: The Ultimate Lib for spigot api

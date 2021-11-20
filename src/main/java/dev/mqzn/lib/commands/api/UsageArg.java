@@ -65,7 +65,8 @@ public class UsageArg implements Comparable<UsageArg>{
     public enum ArgumentType {
 
         OPTIONAL("[", "]"),
-        REQUIRED("<", ">");
+        REQUIRED("<", ">"),
+        NONE("", "");
 
         private final String prefix, suffix;
 

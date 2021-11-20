@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -54,13 +55,19 @@ public class Requirement {
 
     public String getUsage(MCommand command, SubCommand subCommand) {
         StringBuilder rest = new StringBuilder();
-        argParses.values().stream().sorted().map(UsageArg::fullName)
+        HashSet<UsageArg> args = new HashSet<>(argParses.values());
+
+        if(subCommand != null) {
+            args.add(new UsageArg(subCommand.getName(),
+                    subCommand.getPosition(), String.class,
+                    UsageArg.ArgumentType.NONE));
+        }
+
+        args.stream().sorted().map(UsageArg::fullName)
                 .forEachOrdered(str -> rest.append(str).append(" "));
 
         return Translator.color("&8&l[&9+&8&l] &a/"
-                + command.getLabel() + " " +
-                (subCommand != null ? (subCommand.getName() + " ") : "" )
-                + rest.toString());
+                + command.getLabel() + " " + rest.toString());
     }
 
     public UsageArg getArgParse(int position) {
