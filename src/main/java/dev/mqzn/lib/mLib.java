@@ -1,8 +1,6 @@
 package dev.mqzn.lib;
 
-import dev.mqzn.lib.commands.test.TestCommand;
 import dev.mqzn.lib.events.InteractListener;
-import dev.mqzn.lib.managers.CommandManager;
 import dev.mqzn.lib.menus.listeners.MenuListener;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,7 +13,7 @@ public final class mLib extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        CommandManager.getInstance().registerCommand(new TestCommand());
+        //CommandManager.getInstance().registerCommand(new TestCommand());
 
         //mLib menu listener
         Bukkit.getPluginManager().registerEvents(new MenuListener(), this);

@@ -4,6 +4,8 @@ import dev.mqzn.lib.commands.api.MCommand;
 
 public class TestCommand extends MCommand {
 
+    static int price = 0;
+
     public TestCommand() {
         super("test", "test.perms",
                 "test shit", "/test",
@@ -14,7 +16,7 @@ public class TestCommand extends MCommand {
     public void setRequirements() {
 
         //HERE we register our SubCommand in this command
-        this.addRequirement(new KillSubCommand());
+        this.addRequirement(new SetPriceSubCommand());
 
     }
 

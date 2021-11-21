@@ -176,10 +176,9 @@ public abstract class MCommand extends Command {
 
                 SubCommand subCommand = (SubCommand)requirement;
                 int pos = subCommand.getPosition();
-                if(!args.isEmpty() && pos >= 0 &&
-                        pos <= args.size()-1 &&
-                        args.get(pos).getArgument()
-                                .equalsIgnoreCase(subCommand.getName())) {
+
+                if(!args.isEmpty() && pos <= args.size() - 1 && args.get(pos).getArgument().equalsIgnoreCase(subCommand.getName())) {
+                    System.out.println("WORKED, SETTING SUBCOMMAND " + subCommand.getName() + " to get");
 
                     rq = requirement;
                     break;
@@ -195,7 +194,14 @@ public abstract class MCommand extends Command {
                 ArgumentParser<?> parser = CommandManager.getInstance()
                         .getArgumentParser(argEntry.getTypeClass());
 
-                if(!Objects.equals(arg.getParsedArg(), parser.parse(arg.getArgument()) )) {
+                /*
+                    BAD CODE
+                    if(!Objects.equals(arg.getParsedArg(), parser.parse(arg.getArgument())) {
+                        continue
+                    }
+                 */
+
+                if(!parser.matches(arg.getArgument())) {
                     continue requirements;
                 }
 
